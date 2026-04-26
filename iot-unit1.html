@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>وحدة إنترنت الأشياء | المهارات الرقمية - الصف العاشر</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c1: #0a0e1a;
+    --c2: #0d1b3e;
+    --c3: #1a3a6e;
+    --acc1: #00d4ff;
+    --acc2: #7b2fff;
+    --acc3: #ff6b35;
+    --acc4: #00ff9d;
+    --acc5: #ffcc00;
+    --glass: rgba(255,255,255,0.05);
+    --glassborder: rgba(0,212,255,0.2);
+    --text: #e8f4fd;
+    --textmuted: #8ab4cc;
+    --r: 16px;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: 'Tajawal', 'Cairo', sans-serif;
+    background: var(--c1);
+    color: var(--text);
+    overflow-x: hidden;
+    direction: rtl;
+  }
+
+  /* ===== ANIMATED BG ===== */
+  .bg-animated {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 20% 20%, rgba(0,212,255,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(123,47,255,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0,255,157,0.03) 0%, transparent 60%),
+                var(--c1);
+  }
+
+  .stars {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: 
+      radial-gradient(1px 1px at 10% 15%, rgba(0,212,255,0.6), transparent),
+      radial-gradient(1px 1px at 25% 70%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 40% 40%, rgba(123,47,255,0.7), transparent),
+      radial-gradient(1px 1px at 60% 20%, rgba(0,255,157,0.5), transparent),
+      radial-gradient(1px 1px at 75% 85%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(2px 2px at 90% 50%, rgba(0,212,255,0.5), transparent),
+      radial-gradient(1px 1px at 15% 90%, rgba(255,204,0,0.4), transparent),
+      radial-gradient(1px 1px at 55% 55%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1px 1px at 70% 35%, rgba(0,255,157,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 85% 75%, rgba(123,47,255,0.5), transparent);
+    animation: twinkle 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+  }
+
+  /* ===== FLOATING PARTICLES ===== */
+  .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .particle {
+    position: absolute; border-radius: 50%;
+    animation: floatUp linear infinite;
+    opacity: 0;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .main-wrapper { position: relative; z-index: 1; }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 2rem 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse at center top, rgba(0,212,255,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at center bottom, rgba(123,47,255,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--glass); border: 1px solid var(--glassborder);
+    border-radius: 50px; padding: 0.5rem 1.2rem;
+    font-size: 0.85rem; color: var(--acc1);
+    margin-bottom: 1.5rem;
+    animation: fadeInDown 0.8s ease both;
+    backdrop-filter: blur(10px);
+  }
+
+  .hero-badge span { width: 8px; height: 8px; background: var(--acc1); border-radius: 50%; animation: pulse 2s ease infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.5);opacity:0.5;} }
+
+  .hero-title {
+    font-size: clamp(2.2rem, 7vw, 5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    animation: fadeInDown 0.8s ease 0.2s both;
+  }
+
+  .hero-title .gradient-text {
+    background: linear-gradient(135deg, var(--acc1), var(--acc2), var(--acc4));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+    background-size: 200%;
+  }
+
+  @keyframes gradientShift {
+    0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;}
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    color: var(--textmuted);
+    margin-bottom: 1rem;
+    animation: fadeInDown 0.8s ease 0.3s both;
+  }
+
+  .hero-desc {
+    max-width: 600px;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    color: var(--textmuted);
+    line-height: 1.7;
+    margin: 0 auto 2.5rem;
+    animation: fadeInDown 0.8s ease 0.4s both;
+  }
+
+  .hero-iot-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    animation: fadeInDown 0.8s ease 0.1s both, levitate 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(0,212,255,0.5));
+  }
+
+  @keyframes levitate {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: linear-gradient(135deg, var(--acc1), var(--acc2));
+    color: white; border: none; border-radius: 50px;
+    padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 700;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.8s ease 0.5s both;
+    box-shadow: 0 0 30px rgba(0,212,255,0.3);
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 0 50px rgba(0,212,255,0.5);
+  }
+
+  .hero-stats {
+    display: flex; gap: 2rem; justify-content: center;
+    margin-top: 3rem; flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease 0.6s both;
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: 1rem 1.5rem;
+    background: var(--glass); border: 1px solid var(--glassborder);
+    border-radius: var(--r); backdrop-filter: blur(10px);
+  }
+
+  .stat-num { font-size: 2rem; font-weight: 900; color: var(--acc1); display: block; }
+  .stat-label { font-size: 0.8rem; color: var(--textmuted); }
+
+  /* ===== LESSONS NAV ===== */
+  .lessons-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,14,26,0.9); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glassborder);
+    padding: 0.6rem 1rem;
+  }
+
+  .lessons-nav-inner {
+    display: flex; gap: 0.5rem; justify-content: center; align-items: center; flex-wrap: wrap;
+    max-width: 1000px; margin: 0 auto;
+  }
+
+  .nav-btn {
+    padding: 0.5rem 1.2rem; border-radius: 50px;
+    border: 1px solid var(--glassborder);
+    background: var(--glass); color: var(--textmuted);
+    cursor: pointer; font-family: 'Tajawal', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .nav-btn:hover, .nav-btn.active {
+    background: linear-gradient(135deg, var(--acc1), var(--acc2));
+    color: white; border-color: transparent;
+    box-shadow: 0 4px 20px rgba(0,212,255,0.3);
+  }
+
+  /* ===== SECTION ===== */
+  .section {
+    padding: 4rem 1rem;
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center; margin-bottom: 3rem;
+  }
+
+  .lesson-number {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--acc1), var(--acc2));
+    color: white; font-size: 0.75rem; font-weight: 800;
+    padding: 0.3rem 1rem; border-radius: 50px; margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 900; margin-bottom: 0.8rem;
+    background: linear-gradient(135deg, white 0%, var(--acc1) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-desc {
+    color: var(--textmuted); font-size: 1.05rem; line-height: 1.7; max-width: 700px; margin: 0 auto;
+  }
+
+  /* ===== GLASS CARD ===== */
+  .glass-card {
+    background: var(--glass); border: 1px solid var(--glassborder);
+    border-radius: var(--r); backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(0,212,255,0.1);
+  }
+
+  /* ===== GRID LAYOUTS ===== */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+
+  /* ===== CONCEPT CARDS ===== */
+  .concept-card {
+    background: var(--glass); border: 1px solid var(--glassborder);
+    border-radius: var(--r); padding: 1.5rem;
+    text-align: center; position: relative; overflow: hidden;
+    transition: all 0.4s ease;
+    cursor: pointer;
+  }
+
+  .concept-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--acc1), var(--acc2));
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+
+  .concept-card:hover::before { opacity: 0.08; }
+  .concept-card:hover { transform: translateY(-6px); border-color: var(--acc1); }
+
+  .concept-icon { font-size: 2.5rem; margin-bottom: 0.8rem; display: block; position: relative; z-index: 1; }
+  .concept-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--acc1); position: relative; z-index: 1; }
+  .concept-desc { font-size: 0.85rem; color: var(--textmuted); line-height: 1.6; position: relative; z-index: 1; }
+
+  /* ===== DEFINITION BOX ===== */
+  .def-box {
+    background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(123,47,255,0.08));
+    border: 1px solid var(--acc1);
+    border-radius: var(--r); padding: 1.8rem;
+    position: relative; margin-bottom: 2rem;
+  }
+
+  .def-box::before {
+    content: '"';
+    position: absolute; top: -0.5rem; right: 1rem;
+    font-size: 4rem; color: var(--acc1); opacity: 0.3;
+    font-family: serif; line-height: 1;
+  }
+
+  .def-box p { font-size: 1.05rem; line-height: 1.8; color: var(--text); }
+  .def-box strong { color: var(--acc1); }
+
+  /* ===== IOT DIAGRAM ===== */
+  .iot-diagram {
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; gap: 0.5rem; padding: 2rem;
+    background: var(--glass); border: 1px solid var(--glassborder);
+    border-radius: var(--r); margin: 2rem 0;
+  }
+
+  .diag-node {
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    padding: 1rem; min-width: 90px;
+    background: rgba(0,212,255,0.08); border: 1px solid var(--glassborder);
+    border-radius: 12px; text-align: center;
+    cursor: pointer; transition: all 0.3s ease;
+  }
+
+  .diag-node:hover { background: rgba(0,212,255,0.15); transform: scale(1.05); border-color: var(--acc1); }
+  .diag-node .icon { font-size: 2rem; }
+  .diag-node .label { font-size: 0.7rem; color: var(--textmuted); font-weight: 600; }
+
+  .diag-arrow {
+    font-size: 1.2rem; color: var(--acc1); opacity: 0.6;
+    animation: arrowPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes arrowPulse {
+    0%,100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* ===== INTERACTIVE ACCORDION ===== */
+  .accordion { display: flex; flex-direction: column; gap: 0.8rem; }
+
+  .acc-item {
+    border: 1px solid var(--glassborder); border-radius: 12px;
+    overflow: hidden; transition: border-color 0.3s ease;
+  }
+
+  .acc-item.open { border-color: var(--acc1); }
+
+  .acc-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.2rem; cursor: pointer;
+    background: var(--glass);
+    transition: background 0.3s ease;
+  }
+
+  .acc-header:hover { background: rgba(0,212,255,0.05); }
+
+  .acc-header-left { display: flex; align-items: center; gap: 0.8rem; }
+  .acc-icon { font-size: 1.5rem; }
+  .acc-title { font-size: 0.95rem; font-weight: 700; }
+  .acc-chevron { font-size: 1rem; color: var(--acc1); transition: transform 0.3s ease; }
+  .acc-item.open .acc-chevron { transform: rotate(180deg); }
+
+  .acc-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+  }
+
+  .acc-item.open .acc-body { max-height: 600px; }
+
+  .acc-body-inner {
+    padding: 1.2rem 1.5rem;
+    border-top: 1px solid var(--glassborder);
+    font-size: 0.9rem; line-height: 1.8; color: var(--textmuted);
+  }
+
+  .acc-body-inner strong { color: var(--acc1); }
+  .acc-body-inner ul { padding-right: 1.2rem; margin-top: 0.5rem; }
+  .acc-body-inner li { margin-bottom: 0.4rem; }
+
+  /* ===== TABS ===== */
+  .tabs-wrapper { background: var(--glass); border: 1px solid var(--glassborder); border-radius: var(--r); overflow: hidden; }
+
+  .tabs-header {
+    display: flex; overflow-x: auto; border-bottom: 1px solid var(--glassborder);
+    scrollbar-width: none;
+  }
+
+  .tabs-header::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    padding: 0.85rem 1.3rem; border: none; background: transparent;
+    color: var(--textmuted); cursor: pointer; white-space: nowrap;
+    font-family: 'Tajawal', sans-serif; font-size: 0.85rem; font-weight: 600;
+    border-bottom: 2px solid transparent; transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .tab-btn.active {
+    color: var(--acc1); border-bottom-color: var(--acc1);
+    background: rgba(0,212,255,0.05);
+  }
+
+  .tab-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.03); }
+
+  .tab-content { display: none; padding: 1.5rem; }
+  .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== QUIZ ===== */
+  .quiz-card {
+    background: var(--glass); border: 1px solid var(--glassborder);
+    border-radius: var(--r); padding: 1.5rem; margin-bottom: 1.5rem;
+  }
+
+  .quiz-question {
+    font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem;
+    color: var(--text); display: flex; gap: 0.6rem; align-items: flex-start;
+  }
+
+  .quiz-num {
+    background: linear-gradient(135deg, var(--acc1), var(--acc2));
+    color: white; font-size: 0.75rem; font-weight: 800;
+    padding: 0.2rem 0.6rem; border-radius: 50px; white-space: nowrap;
+    margin-top: 0.1rem;
+  }
+
+  .quiz-options { display: flex; flex-direction: column; gap: 0.6rem; }
+
+  .quiz-option {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.75rem 1rem; border-radius: 10px;
+    border: 1px solid var(--glassborder); background: var(--glass);
+    cursor: pointer; transition: all 0.3s ease;
+    font-size: 0.9rem;
+  }
+
+  .quiz-option:hover { border-color: var(--acc1); background: rgba(0,212,255,0.05); }
+  .quiz-option.correct { background: rgba(0,255,157,0.1); border-color: var(--acc4); color: var(--acc4); }
+  .quiz-option.wrong { background: rgba(255,107,53,0.1); border-color: var(--acc3); color: var(--acc3); }
+  .quiz-option.disabled { pointer-events: none; }
+
+  .option-circle {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid var(--glassborder); display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
+    transition: all 0.3s ease;
+  }
+
+  .quiz-option.correct .option-circle { background: var(--acc4); border-color: var(--acc4); color: white; }
+  .quiz-option.wrong .option-circle { background: var(--acc3); border-color: var(--acc3); color: white; }
+
+  .quiz-feedback {
+    margin-top: 0.8rem; padding: 0.8rem 1rem;
+    border-radius: 10px; font-size: 0.85rem; display: none;
+  }
+
+  .quiz-feedback.show { display: block; animation: fadeIn 0.3s ease; }
+  .quiz-feedback.correct-msg { background: rgba(0,255,157,0.1); border: 1px solid rgba(0,255,157,0.3); color: var(--acc4); }
+  .quiz-feedback.wrong-msg { background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.3); color: var(--acc3); }
+
+  .quiz-score {
+    text-align: center; padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(123,47,255,0.1));
+    border: 1px solid var(--acc1); border-radius: var(--r); margin-top: 1rem;
+    display: none;
+  }
+
+  .quiz-score.show { display: block; animation: fadeIn 0.3s ease; }
+  .score-num { font-size: 3rem; font-weight: 900; color: var(--acc1); }
+  .score-label { font-size: 0.9rem; color: var(--textmuted); }
+
+  /* ===== FLASHCARDS ===== */
+  .flashcard-container { perspective: 1000px; }
+
+  .flashcard-scene {
+    width: 100%; max-width: 450px; height: 260px;
+    margin: 0 auto; position: relative;
+    cursor: pointer;
+  }
+
+  .flashcard-inner {
+    width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+    position: relative;
+  }
+
+  .flashcard-scene.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+  .flashcard-face {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border-radius: var(--r); padding: 1.5rem; text-align: center;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  }
+
+  .flashcard-front {
+    background: linear-gradient(135deg, var(--c2), var(--c3));
+    border: 1px solid var(--acc1);
+    box-shadow: 0 0 30px rgba(0,212,255,0.2);
+  }
+
+  .flashcard-back {
+    background: linear-gradient(135deg, rgba(123,47,255,0.2), rgba(0,212,255,0.2));
+    border: 1px solid var(--acc2);
+    transform: rotateY(180deg);
+  }
+
+  .flashcard-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+  .flashcard-term { font-size: 1.3rem; font-weight: 800; color: var(--acc1); }
+  .flashcard-hint { font-size: 0.8rem; color: var(--textmuted); margin-top: 0.8rem; }
+  .flashcard-def { font-size: 0.9rem; line-height: 1.7; color: var(--text); }
+
+  .flashcard-controls {
+    display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap;
+  }
+
+  .fc-btn {
+    padding: 0.6rem 1.5rem; border-radius: 50px; border: 1px solid var(--glassborder);
+    background: var(--glass); color: var(--text); cursor: pointer;
+    font-family: 'Tajawal', sans-serif; font-size: 0.85rem; font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .fc-btn:hover { border-color: var(--acc1); color: var(--acc1); }
+  .fc-btn.primary { background: linear-gradient(135deg, var(--acc1), var(--acc2)); border: none; color: white; }
+
+  .flashcard-counter { text-align: center; margin-top: 1rem; color: var(--textmuted); font-size: 0.85rem; }
+
+  .flashcard-progress-bar {
+    width: 100%; height: 4px; background: rgba(255,255,255,0.1);
+    border-radius: 2px; margin-top: 0.5rem; overflow: hidden;
+  }
+
+  .flashcard-progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--acc1), var(--acc2));
+    transition: width 0.4s ease;
+  }
+
+  /* ===== VIDEO PLACEHOLDER ===== */
+  .video-embed {
+    position: relative; border-radius: var(--r); overflow: hidden;
+    background: rgba(0,0,0,0.5); border: 1px solid var(--glassborder);
+    aspect-ratio: 16/9; cursor: pointer;
+  }
+
+  .video-embed iframe {
+    width: 100%; height: 100%; border: none;
+  }
+
+  .video-embed .play-overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, rgba(10,14,26,0.8), rgba(13,27,62,0.8));
+    transition: opacity 0.3s ease;
+  }
+
+  .video-embed:hover .play-overlay { opacity: 0; }
+  .play-btn-big { font-size: 4rem; color: var(--acc1); }
+  .video-title-text { font-size: 0.9rem; color: var(--textmuted); margin-top: 0.5rem; }
+
+  /* ===== IOT SIMULATOR ===== */
+  .simulator-box {
+    background: var(--c1); border: 1px solid var(--glassborder);
+    border-radius: var(--r); padding: 1.5rem; margin-top: 1.5rem;
+    position: relative; overflow: hidden;
+  }
+
+  .sim-title { font-size: 0.9rem; font-weight: 700; color: var(--acc1); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sim-dot { width: 8px; height: 8px; background: var(--acc4); border-radius: 50%; animation: pulse 1.5s ease infinite; }
+
+  .smart-home {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem; padding: 1rem;
+    background: rgba(0,0,0,0.3); border-radius: 12px;
+  }
+
+  .device-widget {
+    background: var(--glass); border: 1px solid var(--glassborder);
+    border-radius: 12px; padding: 1rem; text-align: center;
+    cursor: pointer; transition: all 0.3s ease; position: relative;
+  }
+
+  .device-widget.on { border-color: var(--acc4); background: rgba(0,255,157,0.08); }
+  .device-widget.on .device-icon { filter: drop-shadow(0 0 10px currentColor); }
+
+  .device-icon { font-size: 2rem; display: block; margin-bottom: 0.4rem; transition: all 0.3s ease; }
+  .device-name { font-size: 0.7rem; color: var(--textmuted); font-weight: 600; }
+  .device-status {
+    position: absolute; top: 0.4rem; left: 0.4rem;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+  }
+
+  .device-widget.on .device-status { background: var(--acc4); box-shadow: 0 0 8px var(--acc4); }
+
+  .sensor-display {
+    margin-top: 1rem; padding: 1rem;
+    background: rgba(0,0,0,0.4); border-radius: 10px;
+    font-family: 'Courier New', monospace; font-size: 0.8rem;
+    color: var(--acc4); min-height: 80px;
+    border: 1px solid rgba(0,255,157,0.1);
+  }
+
+  /* ===== IoT DESIGNER ===== */
+  .iot-designer {
+    border: 1px solid var(--glassborder); border-radius: var(--r);
+    overflow: hidden; background: var(--glass);
+  }
+
+  .designer-toolbar {
+    display: flex; gap: 0.5rem; padding: 0.8rem; flex-wrap: wrap;
+    border-bottom: 1px solid var(--glassborder);
+    background: rgba(0,0,0,0.2);
+  }
+
+  .tool-btn {
+    padding: 0.4rem 0.9rem; border-radius: 8px;
+    background: var(--glass); border: 1px solid var(--glassborder);
+    color: var(--textmuted); cursor: pointer; font-size: 0.75rem;
+    font-family: 'Tajawal', sans-serif; font-weight: 600;
+    transition: all 0.25s ease; display: flex; align-items: center; gap: 0.3rem;
+  }
+
+  .tool-btn:hover, .tool-btn.selected { color: var(--acc1); border-color: var(--acc1); background: rgba(0,212,255,0.08); }
+
+  .designer-canvas {
+    min-height: 350px; padding: 1rem; position: relative;
+    background: 
+      radial-gradient(circle at center, rgba(0,212,255,0.02) 0%, transparent 70%),
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: cover, 30px 30px, 30px 30px;
+  }
+
+  .canvas-component {
+    position: absolute; padding: 0.6rem 0.9rem;
+    background: var(--glass); border: 1px solid var(--glassborder);
+    border-radius: 10px; cursor: move; user-select: none;
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.8rem; font-weight: 600; min-width: 100px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    z-index: 10;
+  }
+
+  .canvas-component:hover { border-color: var(--acc1); box-shadow: 0 4px 20px rgba(0,212,255,0.2); }
+  .canvas-component .comp-icon { font-size: 1.3rem; }
+
+  .canvas-empty-msg {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--textmuted); font-size: 0.85rem; pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .canvas-empty-msg .big-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+
+  .designer-legend {
+    padding: 0.8rem 1rem; border-top: 1px solid var(--glassborder);
+    background: rgba(0,0,0,0.2); display: flex; gap: 1rem; flex-wrap: wrap;
+    font-size: 0.75rem; color: var(--textmuted);
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 0.3rem; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-wrapper { margin-bottom: 2rem; }
+  .progress-label { font-size: 0.8rem; color: var(--textmuted); margin-bottom: 0.4rem; display: flex; justify-content: space-between; }
+  .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--acc1), var(--acc2)); border-radius: 3px; transition: width 1s ease; }
+
+  /* ===== TIMELINE ===== */
+  .timeline { position: relative; padding-right: 2rem; }
+  .timeline::before {
+    content: ''; position: absolute; right: 0; top: 0; bottom: 0;
+    width: 2px; background: linear-gradient(180deg, var(--acc1), var(--acc2));
+  }
+
+  .timeline-item { position: relative; margin-bottom: 1.5rem; }
+  .timeline-dot {
+    position: absolute; right: -2.4rem; top: 0.3rem;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--acc1); border: 2px solid var(--c1);
+    box-shadow: 0 0 10px var(--acc1);
+  }
+
+  .timeline-content { background: var(--glass); border: 1px solid var(--glassborder); border-radius: 10px; padding: 1rem 1.2rem; }
+  .timeline-date { font-size: 0.75rem; color: var(--acc1); font-weight: 700; margin-bottom: 0.3rem; }
+  .timeline-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .timeline-desc { font-size: 0.8rem; color: var(--textmuted); line-height: 1.6; }
+
+  /* ===== PROTOCOL TABLE ===== */
+  .proto-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .proto-table th, .proto-table td { padding: 0.8rem 1rem; text-align: right; border-bottom: 1px solid var(--glassborder); }
+  .proto-table th { background: rgba(0,212,255,0.08); color: var(--acc1); font-weight: 700; font-size: 0.8rem; }
+  .proto-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .proto-table td:first-child { color: var(--acc5); font-weight: 700; }
+
+  /* ===== NETWORK LAYERS ===== */
+  .layers-stack {
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+
+  .layer-item {
+    padding: 1rem 1.5rem; border-radius: 10px; border: 1px solid var(--glassborder);
+    display: flex; align-items: center; gap: 1rem; cursor: pointer;
+    transition: all 0.3s ease; background: var(--glass);
+  }
+
+  .layer-item:hover { transform: translateX(-5px); border-color: var(--acc1); }
+  .layer-num { font-size: 1.5rem; font-weight: 900; opacity: 0.5; min-width: 2rem; text-align: center; }
+  .layer-content { flex: 1; }
+  .layer-name { font-size: 0.9rem; font-weight: 700; color: var(--acc1); }
+  .layer-desc { font-size: 0.8rem; color: var(--textmuted); margin-top: 0.2rem; }
+  .layer-icon { font-size: 1.8rem; }
+
+  /* ===== SECURITY CARDS ===== */
+  .security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  .sec-card {
+    padding: 1.2rem; border-radius: 12px; border: 1px solid;
+    text-align: center; transition: all 0.3s ease;
+  }
+  .sec-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  .sec-card.threat { border-color: rgba(255,107,53,0.4); background: rgba(255,107,53,0.05); }
+  .sec-card.defense { border-color: rgba(0,255,157,0.4); background: rgba(0,255,157,0.05); }
+  .sec-card .sec-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .sec-card .sec-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .sec-card .sec-desc { font-size: 0.75rem; color: var(--textmuted); line-height: 1.5; }
+
+  /* ===== FOOTER ===== */
+  .site-footer {
+    margin-top: 5rem; padding: 2rem 1rem;
+    border-top: 1px solid var(--glassborder);
+    text-align: center; color: var(--textmuted); font-size: 0.85rem;
+    background: rgba(0,0,0,0.2);
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeInDown { from { opacity:0; transform: translateY(-20px); } to { opacity:1; transform: translateY(0); } }
+  @keyframes fadeInUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+
+  .animate-on-scroll {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--c1); }
+  ::-webkit-scrollbar-thumb { background: var(--c3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--acc1); }
+
+  /* ===== HIGHLIGHT BOX ===== */
+  .highlight-box {
+    display: flex; gap: 0.8rem; padding: 1rem 1.2rem;
+    border-radius: 10px; margin: 1rem 0;
+    border-right: 3px solid;
+  }
+
+  .highlight-box.info { background: rgba(0,212,255,0.06); border-color: var(--acc1); }
+  .highlight-box.tip { background: rgba(0,255,157,0.06); border-color: var(--acc4); }
+  .highlight-box.warn { background: rgba(255,204,0,0.06); border-color: var(--acc5); }
+  .highlight-box .hl-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .highlight-box .hl-text { font-size: 0.85rem; color: var(--textmuted); line-height: 1.7; }
+  .highlight-box .hl-text strong { color: var(--text); }
+
+  /* ===== SCROLLABLE SECTION DIVIDER ===== */
+  .section-divider {
+    width: 80px; height: 3px; margin: 1rem auto;
+    background: linear-gradient(90deg, var(--acc1), var(--acc2));
+    border-radius: 2px;
+  }
+
+  /* ===== LESSON CARD ===== */
+  .lesson-card-big {
+    background: var(--glass); border: 1px solid var(--glassborder);
+    border-radius: var(--r); padding: 1.5rem;
+    display: flex; gap: 1.2rem; align-items: flex-start;
+    transition: all 0.3s ease; cursor: pointer;
+    text-decoration: none; color: inherit;
+  }
+
+  .lesson-card-big:hover { border-color: var(--acc1); transform: translateX(-4px); }
+
+  .lesson-num-big {
+    font-size: 3rem; font-weight: 900; opacity: 0.15;
+    color: var(--acc1); flex-shrink: 0; line-height: 1;
+  }
+
+  .lesson-card-content { flex: 1; }
+  .lesson-card-tag { font-size: 0.7rem; color: var(--acc1); font-weight: 700; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .lesson-card-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.4rem; }
+  .lesson-card-desc { font-size: 0.85rem; color: var(--textmuted); line-height: 1.6; }
+
+  /* ===== TAG CHIPS ===== */
+  .tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem; }
+  .tag {
+    font-size: 0.7rem; padding: 0.2rem 0.6rem;
+    border-radius: 50px; border: 1px solid var(--glassborder);
+    color: var(--textmuted); background: var(--glass);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .section { padding: 2.5rem 1rem; }
+    .hero-stats { gap: 1rem; }
+    .diag-arrow { font-size: 0.8rem; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .iot-diagram { flex-direction: column; }
+    .diag-arrow { transform: rotate(90deg); }
+  }
+
+  /* ===== MODAL ===== */
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+    display: none; align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+
+  .modal-backdrop.open { display: flex; animation: fadeIn 0.3s ease; }
+
+  .modal-box {
+    background: var(--c2); border: 1px solid var(--glassborder);
+    border-radius: var(--r); padding: 2rem; max-width: 500px; width: 100%;
+    max-height: 80vh; overflow-y: auto; position: relative;
+  }
+
+  .modal-close {
+    position: absolute; top: 1rem; left: 1rem;
+    background: none; border: none; color: var(--textmuted);
+    font-size: 1.2rem; cursor: pointer; transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: var(--acc3); }
+  .modal-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 1rem; color: var(--acc1); }
+  .modal-body { font-size: 0.9rem; color: var(--textmuted); line-height: 1.8; }
+  .modal-body strong { color: var(--text); }
+  .modal-body ul { padding-right: 1.2rem; }
+  .modal-body li { margin-bottom: 0.4rem; }
+</style>
+</head>
+<body>
+
+<!-- Animated backgrounds -->
+<div class="bg-animated"></div>
+<div class="stars"></div>
+<div class="particles" id="particles"></div>
+
+<div class="main-wrapper">
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <div class="hero-badge"><span></span> المهارات الرقمية | الصف العاشر | الفصل الثاني</div>
+    <div class="hero-iot-icon">🌐</div>
+    <h1 class="hero-title">
+      <span class="gradient-text">إنترنت الأشياء</span>
+    </h1>
+    <p class="hero-sub">Internet of Things (IoT)</p>
+    <p class="hero-desc">
+      رحلة تعليمية تفاعلية شاملة في عالم إنترنت الأشياء — تعلّم كيف تتحدث الأجهزة مع بعضها وتغيّر حياتنا اليومية
+    </p>
+    <a href="#lessons-overview" class="btn-primary">🚀 ابدأ رحلة التعلم</a>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">4</span>
+        <div class="stat-label">دروس تفاعلية</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">40+</span>
+        <div class="stat-label">بطاقة تعليمية</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">٣</span>
+        <div class="stat-label">اختبارات ذكية</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">🎮</span>
+        <div class="stat-label">محاكاة تفاعلية</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STICKY NAV ===== -->
+  <nav class="lessons-nav">
+    <div class="lessons-nav-inner">
+      <button class="nav-btn active" onclick="scrollToSection('home')">🏠 الرئيسية</button>
+      <button class="nav-btn" onclick="scrollToSection('lesson1')">📡 الدرس الأول</button>
+      <button class="nav-btn" onclick="scrollToSection('lesson2')">🏠 الدرس الثاني</button>
+      <button class="nav-btn" onclick="scrollToSection('lesson3')">🔗 الدرس الثالث</button>
+      <button class="nav-btn" onclick="scrollToSection('lesson4')">🎮 الدرس الرابع</button>
+      <button class="nav-btn" onclick="scrollToSection('flashcards')">🃏 البطاقات</button>
+    </div>
+  </nav>
+
+  <!-- ===== OVERVIEW ===== -->
+  <section class="section" id="lessons-overview">
+    <div class="section-header animate-on-scroll">
+      <div class="lesson-number">نظرة عامة</div>
+      <h2 class="section-title">خريطة الوحدة الدراسية</h2>
+      <div class="section-divider"></div>
+      <p class="section-desc">الوحدة الأولى: إنترنت الأشياء — أربعة دروس متكاملة تأخذك من المفهوم حتى التطبيق الفعلي</p>
+    </div>
+
+    <div class="grid-2">
+      <a class="lesson-card-big animate-on-scroll" onclick="scrollToSection('lesson1')">
+        <div class="lesson-num-big">01</div>
+        <div class="lesson-card-content">
+          <div class="lesson-card-tag">📡 LESSON 1</div>
+          <div class="lesson-card-title">مقدمة في إنترنت الأشياء ومكوناته ووظائفه</div>
+          <div class="lesson-card-desc">تعرّف على مفهوم IoT، مكوناته الخمسة، وكيف تعمل الحساسات والمشغلات معاً</div>
+          <div class="tags"><span class="tag">🔌 الحساسات</span><span class="tag">⚙️ المشغلات</span><span class="tag">☁️ السحابة</span></div>
+        </div>
+      </a>
+      <a class="lesson-card-big animate-on-scroll" onclick="scrollToSection('lesson2')">
+        <div class="lesson-num-big">02</div>
+        <div class="lesson-card-content">
+          <div class="lesson-card-tag">🏠 LESSON 2</div>
+          <div class="lesson-card-title">أمثلة عملية على أنظمة ذكية</div>
+          <div class="lesson-card-desc">المنزل الذكي، الرعاية الصحية الذكية، الزراعة الذكية، السيارات الذكية وغيرها</div>
+          <div class="tags"><span class="tag">🏡 المنزل الذكي</span><span class="tag">🚗 سيارات ذكية</span><span class="tag">🏥 صحة</span></div>
+        </div>
+      </a>
+      <a class="lesson-card-big animate-on-scroll" onclick="scrollToSection('lesson3')">
+        <div class="lesson-num-big">03</div>
+        <div class="lesson-card-content">
+          <div class="lesson-card-tag">🔗 LESSON 3</div>
+          <div class="lesson-card-title">تصميم الشبكات وجمع البيانات</div>
+          <div class="lesson-card-desc">بروتوكولات الاتصال، هيكلية شبكة IoT، أمن إنترنت الأشياء وحمايته</div>
+          <div class="tags"><span class="tag">📶 Wi-Fi</span><span class="tag">🔵 Bluetooth</span><span class="tag">🔐 أمن</span></div>
+        </div>
+      </a>
+      <a class="lesson-card-big animate-on-scroll" onclick="scrollToSection('lesson4')">
+        <div class="lesson-num-big">04</div>
+        <div class="lesson-card-content">
+          <div class="lesson-card-tag">🎮 LESSON 4</div>
+          <div class="lesson-card-title">تطبيقات عملية لتصميم شبكة IoT</div>
+          <div class="lesson-card-desc">صمّم نظام IoT خاص بك! محاكاة تفاعلية، مشروع المنزل الذكي، ومشروع نظام الري</div>
+          <div class="tags"><span class="tag">🎨 تصميم</span><span class="tag">🤖 محاكاة</span><span class="tag">💡 مشروع</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ===== LESSON 1: INTRO TO IoT ===== -->
+  <!-- ============================================================ -->
+  <section class="section" id="lesson1">
+    <div class="section-header animate-on-scroll">
+      <div class="lesson-number">الدرس الأول</div>
+      <h2 class="section-title">مقدمة في إنترنت الأشياء ومكوناته</h2>
+      <div class="section-divider"></div>
+      <p class="section-desc">Introductions to the Internet of Things (IoT) Components and Functions</p>
+    </div>
+
+    <!-- Video Section -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.85rem;color:var(--acc1);font-weight:700;margin-bottom:1rem;">🎥 شاهد وتعلم — فيديو تعليمي</div>
+      <div class="grid-2" style="gap:1rem;">
+        <div>
+          <div class="video-embed" onclick="openVideo('https://www.youtube.com/embed/h0gWfVCSGQQ', 'ما هو إنترنت الأشياء؟')">
+            <iframe src="https://www.youtube.com/embed/h0gWfVCSGQQ" title="IoT Intro" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="font-size:0.8rem;color:var(--textmuted);margin-top:0.5rem;text-align:center;">ما هو إنترنت الأشياء؟ — مقدمة بسيطة</div>
+        </div>
+        <div>
+          <div class="video-embed" onclick="openVideo('https://www.youtube.com/embed/LlhmzVL5bm8', 'مكونات إنترنت الأشياء')">
+            <iframe src="https://www.youtube.com/embed/LlhmzVL5bm8" title="IoT Components" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="font-size:0.8rem;color:var(--textmuted);margin-top:0.5rem;text-align:center;">مكونات إنترنت الأشياء بالتفصيل</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Definition -->
+    <div class="def-box animate-on-scroll">
+      <p>
+        <strong>إنترنت الأشياء (IoT)</strong> هو شبكة من الأجهزة الإلكترونية (الأشياء أو الكينونات) التي تُدمج في أجهزة الاستشعار والبرمجيات وتقنيات الاتصال، ويمكنها جمع البيانات ومشاركتها عبر الإنترنت من دون حاجة إلى تدخل بشري مباشر؛ ما يسمح لها بأن تعمل بصورة ذكية، وأن تزيد من الكفاءة في العديد من المجالات.
+      </p>
+    </div>
+
+    <!-- IoT Diagram -->
+    <div class="animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc1);">🔄 كيف يعمل إنترنت الأشياء؟</div>
+      <div class="iot-diagram">
+        <div class="diag-node" onclick="showModal('sensor-info')">
+          <div class="icon">🌡️</div>
+          <div class="label">حساسات<br>Sensors</div>
+        </div>
+        <div class="diag-arrow">◀️</div>
+        <div class="diag-node" onclick="showModal('device-info')">
+          <div class="icon">📱</div>
+          <div class="label">أجهزة IoT<br>Devices</div>
+        </div>
+        <div class="diag-arrow">◀️</div>
+        <div class="diag-node" onclick="showModal('gateway-info')">
+          <div class="icon">🔌</div>
+          <div class="label">بوابة<br>Gateway</div>
+        </div>
+        <div class="diag-arrow">◀️</div>
+        <div class="diag-node" onclick="showModal('cloud-info')">
+          <div class="icon">☁️</div>
+          <div class="label">السحابة<br>Cloud</div>
+        </div>
+        <div class="diag-arrow">◀️</div>
+        <div class="diag-node" onclick="showModal('ui-info')">
+          <div class="icon">👤</div>
+          <div class="label">المستخدم<br>End User</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:0.75rem;color:var(--textmuted);">اضغط على أي مكون لمعرفة تفاصيله</div>
+    </div>
+
+    <!-- Components Accordion -->
+    <div class="animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc1);">📦 مكونات نظام إنترنت الأشياء الخمسة</div>
+      <div class="accordion">
+        <div class="acc-item" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-header-left">
+              <span class="acc-icon">🌡️</span>
+              <span class="acc-title">أولاً: أجهزة الاستشعار (Sensors) والمشغلات (Actuators)</span>
+            </div>
+            <span class="acc-chevron">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              <strong>أجهزة الاستشعار</strong> تجمع البيانات من البيئة وتحوّلها إلى إشارات كهربائية أو تمثيلات رقمية.
+              <ul>
+                <li>أجهزة استشعار درجة الحرارة</li>
+                <li>أجهزة استشعار الرطوبة</li>
+                <li>أجهزة استشعار الصوت والاهتزاز</li>
+                <li>أجهزة استشعار الضوء واللون</li>
+                <li>أجهزة استشعار الضغط والغاز</li>
+                <li>أجهزة استشعار الرائحة</li>
+              </ul>
+              <br>
+              <strong>المشغلات</strong> تستقبل إشارة كهربائية وتُحدث تأثيراً مادياً في العالم الحقيقي — مثل فتح صمام، تشغيل محرك، إيقاف مكيف.
+            </div>
+          </div>
+        </div>
+
+        <div class="acc-item" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-header-left">
+              <span class="acc-icon">💻</span>
+              <span class="acc-title">ثانياً: أجهزة إنترنت الأشياء (IoT Devices)</span>
+            </div>
+            <span class="acc-chevron">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              أجهزة مادية تتكوّن من: وحدة حوسبة، وحدة اتصال، وحدة تخزين، وحدة إدخال/إخراج. من أبرزها:
+              <ul>
+                <li><strong>وحدات التحكم الدقيقة (MCUs):</strong> مثل Arduino Uno — أجهزة حاسوب صغيرة ومضغوطة للتحكم في الأنظمة</li>
+                <li><strong>لوحات تطوير المتحكم الدقيق:</strong> تُثبّت عليها جميع وحدات النظام وتحتاج واجهة برمجية</li>
+                <li><strong>الحاسوب الأحادي اللوحة (SBC):</strong> مثل Raspberry Pi — حاسوب صغير كامل مع واجهة للشاشة والفأرة</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc-item" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-header-left">
+              <span class="acc-icon">📶</span>
+              <span class="acc-title">ثالثاً: وسيلة الاتصال (Communication Medium)</span>
+            </div>
+            <span class="acc-chevron">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              تتطلب مكوّنين: <strong>البروتوكولات</strong> (قواعد تنظّم تبادل البيانات) و<strong>بوابة IoT</strong>.
+              <br><br>
+              <strong>بوابة إنترنت الأشياء (IoT Gateway):</strong> جهاز وسيط يترجم بروتوكولات الاتصال ويؤمّن الشبكة ويدير حركة البيانات بكفاءة عالية.
+              <br><br>
+              <strong>أبرز البروتوكولات:</strong>
+              <ul>
+                <li>Wi-Fi: للشبكات المحلية والمنازل الذكية</li>
+                <li>Bluetooth: للأجهزة القابلة للارتداء (ساعات، سماعات)</li>
+                <li>Zigbee: للشبكات ذات استهلاك طاقة منخفض</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc-item" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-header-left">
+              <span class="acc-icon">☁️</span>
+              <span class="acc-title">رابعاً: منصة السحابة (Cloud Platform)</span>
+            </div>
+            <span class="acc-chevron">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              عندما تصل البيانات إلى الحوسبة السحابية، تعمل البرمجيات على معالجتها لاستخلاص النتائج واتخاذ قرارات ذكية. تقوم بـ:
+              <ul>
+                <li>إرسال تنبيهات للمستخدم</li>
+                <li>إعادة ضبط أجهزة الاستشعار تلقائياً</li>
+                <li>اتخاذ قرارات دون تدخل بشري</li>
+                <li>تخزين البيانات والتحليل المتقدم</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc-item" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-header-left">
+              <span class="acc-icon">👤</span>
+              <span class="acc-title">خامساً: واجهة المستخدم النهائي (End User Interface)</span>
+            </div>
+            <span class="acc-chevron">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              واجهة تعرض المعلومات للمستخدم النهائي على هيئة رسائل وإشعارات، وتمكّنه من عرض جميع بيانات المكان في مكان واحد والتفاعل معها. يمكن التحكم عبر:
+              <ul>
+                <li>تطبيقات الهاتف الذكي</li>
+                <li>المواقع الإلكترونية</li>
+                <li>التحكم الصوتي (مثل Alexa, Google Home)</li>
+                <li>لوحات التحكم باللمس</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Types of Smart Objects -->
+    <div class="animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc1);">📱 أنواع الأشياء الذكية</div>
+      <div class="tabs-wrapper">
+        <div class="tabs-header">
+          <button class="tab-btn active" onclick="switchTab(this, 'tab-fixed')">📌 الأشياء الثابتة</button>
+          <button class="tab-btn" onclick="switchTab(this, 'tab-mobile')">🚶 الأشياء المتنقلة</button>
+        </div>
+        <div id="tab-fixed" class="tab-content active">
+          <div class="grid-3">
+            <div class="concept-card">
+              <span class="concept-icon">🏠</span>
+              <div class="concept-title">أجهزة المنزل الذكي</div>
+              <div class="concept-desc">أجهزة المطبخ، الستائر الآلية، الإضاءة الذكية</div>
+            </div>
+            <div class="concept-card">
+              <span class="concept-icon">🎵</span>
+              <div class="concept-title">أنظمة الموسيقى</div>
+              <div class="concept-desc">تستشعر الحالة المزاجية وتشغّل الموسيقى المناسبة</div>
+            </div>
+            <div class="concept-card">
+              <span class="concept-icon">🚪</span>
+              <div class="concept-title">الأبواب الآلية</div>
+              <div class="concept-desc">تفتح وتُغلق تلقائياً بالاستشعار</div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-mobile" class="tab-content">
+          <div class="grid-3">
+            <div class="concept-card">
+              <span class="concept-icon">📱</span>
+              <div class="concept-title">الهاتف الذكي</div>
+              <div class="concept-desc">يحمل GPS، كاميرا، حساسات لياقة بدنية، يتصل بالإنترنت في أي مكان</div>
+            </div>
+            <div class="concept-card">
+              <span class="concept-icon">⌚</span>
+              <div class="concept-title">الساعة الذكية</div>
+              <div class="concept-desc">تراقب دقات القلب، خطوات المشي، وترسل تنبيهات الرسائل</div>
+            </div>
+            <div class="concept-card">
+              <span class="concept-icon">🥽</span>
+              <div class="concept-title">نظارات جوجل</div>
+              <div class="concept-desc">حاسوب مُصغّر بشكل نظارات، فيها كاميرا ونظام GPS وشاشة رقيقة</div>
+            </div>
+            <div class="concept-card">
+              <span class="concept-icon">🚗</span>
+              <div class="concept-title">السيارة الذكية</div>
+              <div class="concept-desc">تراقب حرارة المحرك، ضغط الإطارات، وكفاءة أنظمة السلامة</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz 1 -->
+    <div class="animate-on-scroll">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc5);">🧠 اختبر فهمك — الدرس الأول</div>
+      <div id="quiz1">
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س١</span> ما هو التعريف الصحيح لإنترنت الأشياء؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q1f1')">
+              <div class="option-circle">أ</div> شبكة مواقع إلكترونية تتبادل البيانات
+            </div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q1f1')">
+              <div class="option-circle">ب</div> شبكة من الأجهزة الإلكترونية تجمع وتشارك البيانات تلقائياً دون تدخل بشري
+            </div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q1f1')">
+              <div class="option-circle">ج</div> تطبيق هاتفي لمشاركة الملفات
+            </div>
+          </div>
+          <div id="q1f1" class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س٢</span> أيٌّ مما يلي يُعدّ من أجهزة الاستشعار؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q1f2')"><div class="option-circle">أ</div> شاشة الهاتف</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q1f2')"><div class="option-circle">ب</div> بطارية الحاسوب</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q1f2')"><div class="option-circle">ج</div> جهاز استشعار درجة الحرارة</div>
+          </div>
+          <div id="q1f2" class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س٣</span> ما وظيفة المشغّل (Actuator) في نظام IoT؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q1f3')"><div class="option-circle">أ</div> قراءة البيانات من البيئة</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q1f3')"><div class="option-circle">ب</div> إحداث تأثير مادي بعد استقبال إشارة كهربائية</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q1f3')"><div class="option-circle">ج</div> تخزين البيانات في السحابة</div>
+          </div>
+          <div id="q1f3" class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س٤</span> ما هو Arduino Uno؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q1f4')"><div class="option-circle">أ</div> لوحة تطوير للمتحكم الدقيق تُستخدم في مشاريع IoT</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q1f4')"><div class="option-circle">ب</div> بروتوكول اتصال لاسلكي</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q1f4')"><div class="option-circle">ج</div> تطبيق لإدارة الشبكات</div>
+          </div>
+          <div id="q1f4" class="quiz-feedback"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ===== LESSON 2: SMART SYSTEMS ===== -->
+  <!-- ============================================================ -->
+  <section class="section" id="lesson2">
+    <div class="section-header animate-on-scroll">
+      <div class="lesson-number">الدرس الثاني</div>
+      <h2 class="section-title">أمثلة عملية على أنظمة ذكية</h2>
+      <div class="section-divider"></div>
+      <p class="section-desc">Practical Examples of Smart Systems — كيف يغيّر إنترنت الأشياء حياتنا اليومية</p>
+    </div>
+
+    <!-- Video -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.85rem;color:var(--acc1);font-weight:700;margin-bottom:1rem;">🎥 الأنظمة الذكية في الحياة اليومية</div>
+      <div class="grid-2" style="gap:1rem;">
+        <div>
+          <div class="video-embed">
+            <iframe src="https://www.youtube.com/embed/1EG2d4E_rFQ" title="Smart Home" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="font-size:0.8rem;color:var(--textmuted);margin-top:0.5rem;text-align:center;">المنزل الذكي — كيف يعمل؟</div>
+        </div>
+        <div>
+          <div class="video-embed">
+            <iframe src="https://www.youtube.com/embed/QSIPNhOizvs" title="Smart City" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="font-size:0.8rem;color:var(--textmuted);margin-top:0.5rem;text-align:center;">المدن الذكية وإنترنت الأشياء</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Smart Systems Grid -->
+    <div class="animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1.2rem;color:var(--acc1);">🌟 تطبيقات إنترنت الأشياء في الحياة</div>
+      <div class="grid-3">
+        <div class="concept-card" onclick="showModal('smart-home-modal')">
+          <span class="concept-icon">🏠</span>
+          <div class="concept-title">المنزل الذكي</div>
+          <div class="concept-desc">التحكم التلقائي بالإضاءة والتكييف والأمان عبر الهاتف</div>
+        </div>
+        <div class="concept-card" onclick="showModal('smart-health-modal')">
+          <span class="concept-icon">🏥</span>
+          <div class="concept-title">الرعاية الصحية الذكية</div>
+          <div class="concept-desc">مراقبة صحة المرضى عن بُعد والتنبيه الفوري للطوارئ</div>
+        </div>
+        <div class="concept-card" onclick="showModal('smart-agri-modal')">
+          <span class="concept-icon">🌱</span>
+          <div class="concept-title">الزراعة الذكية</div>
+          <div class="concept-desc">رش المياه تلقائياً وقياس رطوبة التربة لتوفير الموارد</div>
+        </div>
+        <div class="concept-card" onclick="showModal('smart-car-modal')">
+          <span class="concept-icon">🚗</span>
+          <div class="concept-title">السيارات الذكية</div>
+          <div class="concept-desc">مراقبة حالة السيارة والقيادة المساعَدة للسلامة</div>
+        </div>
+        <div class="concept-card" onclick="showModal('smart-city-modal')">
+          <span class="concept-icon">🌆</span>
+          <div class="concept-title">المدن الذكية</div>
+          <div class="concept-desc">إدارة ذكية للطاقة والنقل والخدمات البلدية</div>
+        </div>
+        <div class="concept-card" onclick="showModal('smart-industry-modal')">
+          <span class="concept-icon">🏭</span>
+          <div class="concept-title">الصناعة الذكية</div>
+          <div class="concept-desc">مراقبة خطوط الإنتاج وصيانة الآلات تلقائياً</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:0.75rem;color:var(--textmuted);margin-top:0.8rem;">اضغط على أي بطاقة لمعرفة التفاصيل</div>
+    </div>
+
+    <!-- Smart Home Simulator -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc1);">🏠 محاكاة المنزل الذكي — تحكّم بالأجهزة!</div>
+      <div class="smart-home">
+        <div class="device-widget" onclick="toggleDevice(this, 'light', '💡 الإضاءة مُشغَّلة - كثافة: 80%')">
+          <div class="device-status"></div>
+          <span class="device-icon">💡</span>
+          <div class="device-name">الإضاءة</div>
+        </div>
+        <div class="device-widget" onclick="toggleDevice(this, 'ac', '❄️ المكيف مُشغَّل - درجة الحرارة: 22°C')">
+          <div class="device-status"></div>
+          <span class="device-icon">❄️</span>
+          <div class="device-name">المكيف</div>
+        </div>
+        <div class="device-widget" onclick="toggleDevice(this, 'door', '🔒 الباب مُقفَّل - تم التحقق من الهوية')">
+          <div class="device-status"></div>
+          <span class="device-icon">🚪</span>
+          <div class="device-name">الباب</div>
+        </div>
+        <div class="device-widget" onclick="toggleDevice(this, 'cam', '📷 الكاميرا نشطة - تسجيل مستمر')">
+          <div class="device-status"></div>
+          <span class="device-icon">📷</span>
+          <div class="device-name">الكاميرا</div>
+        </div>
+        <div class="device-widget" onclick="toggleDevice(this, 'tv', '📺 التلفاز مُشغَّل - Netflix')">
+          <div class="device-status"></div>
+          <span class="device-icon">📺</span>
+          <div class="device-name">التلفاز</div>
+        </div>
+        <div class="device-widget" onclick="toggleDevice(this, 'alarm', '🔔 نظام الإنذار نشط')">
+          <div class="device-status"></div>
+          <span class="device-icon">🔔</span>
+          <div class="device-name">الإنذار</div>
+        </div>
+      </div>
+      <div class="sensor-display" id="sensorDisplay">
+        <span style="color:var(--acc1);">► </span>انتظر... انقر على أي جهاز للتحكم به<br>
+        <span style="color:var(--textmuted);font-size:0.75rem;">جميع الأجهزة متصلة عبر شبكة Wi-Fi المنزلية ✓</span>
+      </div>
+    </div>
+
+    <!-- How Smart Home Works -->
+    <div class="animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc1);">⚙️ آلية عمل المنازل الذكية</div>
+      <div class="accordion">
+        <div class="acc-item open" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-header-left"><span class="acc-icon">1️⃣</span><span class="acc-title">الاستشعار — جمع البيانات</span></div>
+            <span class="acc-chevron">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              تقرأ أجهزة الاستشعار المنتشرة في المنزل البيانات باستمرار: درجة الحرارة، الحركة، الضوء، الصوت، وجود أشخاص أو دخان.
+            </div>
+          </div>
+        </div>
+        <div class="acc-item" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-header-left"><span class="acc-icon">2️⃣</span><span class="acc-title">الاتصال — إرسال البيانات</span></div>
+            <span class="acc-chevron">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              تُرسَل البيانات عبر Wi-Fi أو Bluetooth إلى البوابة المركزية، ثم إلى الخادم السحابي للمعالجة.
+            </div>
+          </div>
+        </div>
+        <div class="acc-item" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-header-left"><span class="acc-icon">3️⃣</span><span class="acc-title">التحليل — اتخاذ القرار</span></div>
+            <span class="acc-chevron">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              تحلّل برمجيات الذكاء الاصطناعي البيانات وتتخذ قرارات: تشغيل التكييف، إطفاء الأضواء، إرسال تنبيه أمني.
+            </div>
+          </div>
+        </div>
+        <div class="acc-item" onclick="toggleAcc(this)">
+          <div class="acc-header">
+            <div class="acc-header-left"><span class="acc-icon">4️⃣</span><span class="acc-title">التنفيذ — التحكم الأوتوماتيكي</span></div>
+            <span class="acc-chevron">▼</span>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              تُنفَّذ الأوامر تلقائياً عبر المشغلات: يُفتح باب، تُشغَّل مضخة، يُطفأ تكييف، دون أن يرفع الإنسان إصبعاً.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz 2 -->
+    <div class="animate-on-scroll">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc5);">🧠 اختبر فهمك — الدرس الثاني</div>
+      <div id="quiz2">
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س١</span> ما الذي يميّز المنزل الذكي عن المنزل التقليدي؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q2f1')"><div class="option-circle">أ</div> وجود أثاث أغلى وأجمل</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q2f1')"><div class="option-circle">ب</div> أجهزة متصلة بالإنترنت تعمل تلقائياً وتتحكم بها عن بُعد</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q2f1')"><div class="option-circle">ج</div> مساحة أكبر وعدد غرف أكثر</div>
+          </div>
+          <div id="q2f1" class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س٢</span> كيف تُسهم الزراعة الذكية في توفير الموارد؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q2f2')"><div class="option-circle">أ</div> بزيادة عدد العمال في الحقل</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q2f2')"><div class="option-circle">ب</div> باستخدام حساسات الرطوبة لري المحاصيل فقط عند الحاجة</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q2f2')"><div class="option-circle">ج</div> بزراعة محاصيل أقل تحتاج ماءً أكثر</div>
+          </div>
+          <div id="q2f2" class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س٣</span> في الرعاية الصحية الذكية، ما وظيفة الحساسات القابلة للارتداء؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q2f3')"><div class="option-circle">أ</div> استبدال الأطباء كلياً</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q2f3')"><div class="option-circle">ب</div> تزيين المظهر فقط</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q2f3')"><div class="option-circle">ج</div> مراقبة العلامات الحيوية وإرسال البيانات للطبيب في الوقت الحقيقي</div>
+          </div>
+          <div id="q2f3" class="quiz-feedback"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ===== LESSON 3: NETWORKS & SECURITY ===== -->
+  <!-- ============================================================ -->
+  <section class="section" id="lesson3">
+    <div class="section-header animate-on-scroll">
+      <div class="lesson-number">الدرس الثالث</div>
+      <h2 class="section-title">تصميم الشبكات وجمع البيانات</h2>
+      <div class="section-divider"></div>
+      <p class="section-desc">Network Design and Data Collection — هيكلية شبكة IoT وبروتوكولات الاتصال والأمن</p>
+    </div>
+
+    <!-- Video -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.85rem;color:var(--acc1);font-weight:700;margin-bottom:1rem;">🎥 شبكات إنترنت الأشياء</div>
+      <div class="grid-2" style="gap:1rem;">
+        <div>
+          <div class="video-embed">
+            <iframe src="https://www.youtube.com/embed/wYi5GrVT5eM" title="IoT Networks" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="font-size:0.8rem;color:var(--textmuted);margin-top:0.5rem;text-align:center;">بروتوكولات شبكات IoT</div>
+        </div>
+        <div>
+          <div class="video-embed">
+            <iframe src="https://www.youtube.com/embed/2PJl9RCoqGw" title="IoT Security" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="font-size:0.8rem;color:var(--textmuted);margin-top:0.5rem;text-align:center;">أمن إنترنت الأشياء</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Protocols Table -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:2rem;overflow-x:auto;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc1);">📡 بروتوكولات الاتصال في IoT</div>
+      <table class="proto-table">
+        <thead>
+          <tr>
+            <th>البروتوكول</th>
+            <th>الوصف</th>
+            <th>الاستخدام الشائع</th>
+            <th>المدى</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Wi-Fi</td>
+            <td>تقنية اتصال لاسلكي باستخدام موجات الراديو</td>
+            <td>الشبكات المحلية، المنازل الذكية، الكاميرات</td>
+            <td>~50م</td>
+          </tr>
+          <tr>
+            <td>Bluetooth</td>
+            <td>تقنية لاسلكي قصيرة المدى</td>
+            <td>الأجهزة القابلة للارتداء، سماعات الرأس</td>
+            <td>~10م</td>
+          </tr>
+          <tr>
+            <td>Zigbee</td>
+            <td>شبكات ذات استهلاك طاقة منخفض</td>
+            <td>الإضاءة الذكية، أجهزة الاستشعار المنزلية</td>
+            <td>~75م</td>
+          </tr>
+          <tr>
+            <td>Z-Wave</td>
+            <td>بروتوكول تحكم المنزل الذكي</td>
+            <td>التحكم في الأجهزة المنزلية</td>
+            <td>~30م</td>
+          </tr>
+          <tr>
+            <td>LoRaWAN</td>
+            <td>اتصال مدى طويل باستهلاك منخفض</td>
+            <td>الزراعة الذكية، المدن الذكية</td>
+            <td>~15كم</td>
+          </tr>
+          <tr>
+            <td>4G/5G</td>
+            <td>شبكة الهاتف الخلوي</td>
+            <td>السيارات الذكية، الصناعة، الطوارئ</td>
+            <td>عالمي</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Network Architecture Layers -->
+    <div class="animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc1);">🏗️ هيكلية شبكة إنترنت الأشياء (3 طبقات)</div>
+      <div class="layers-stack">
+        <div class="layer-item">
+          <div class="layer-num" style="color:var(--acc4);">1</div>
+          <div class="layer-icon">🌡️</div>
+          <div class="layer-content">
+            <div class="layer-name" style="color:var(--acc4);">طبقة الإدراك (Perception Layer)</div>
+            <div class="layer-desc">أجهزة الاستشعار والمشغلات — تجمع البيانات الخام من البيئة المادية مثل درجة الحرارة، الحركة، الصوت</div>
+          </div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-num" style="color:var(--acc1);">2</div>
+          <div class="layer-icon">📶</div>
+          <div class="layer-content">
+            <div class="layer-name" style="color:var(--acc1);">طبقة الشبكة (Network Layer)</div>
+            <div class="layer-desc">بروتوكولات الاتصال وبوابات IoT — تنقل البيانات من الأجهزة إلى منصات المعالجة</div>
+          </div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-num" style="color:var(--acc2);">3</div>
+          <div class="layer-icon">☁️</div>
+          <div class="layer-content">
+            <div class="layer-name" style="color:var(--acc2);">طبقة التطبيق (Application Layer)</div>
+            <div class="layer-desc">الحوسبة السحابية وواجهة المستخدم — تعالج البيانات وتقدّم الخدمات الذكية للمستخدم النهائي</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Collection Flow -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1.2rem;color:var(--acc1);">📊 مراحل جمع البيانات ومعالجتها</div>
+      <div class="iot-diagram" style="flex-wrap:wrap;">
+        <div class="diag-node" style="background:rgba(0,255,157,0.08);border-color:var(--acc4);">
+          <div class="icon">🌡️</div><div class="label">جمع البيانات<br>بالحساسات</div>
+        </div>
+        <div class="diag-arrow" style="color:var(--acc4);">◀</div>
+        <div class="diag-node">
+          <div class="icon">📦</div><div class="label">تحزيم البيانات<br>وضغطها</div>
+        </div>
+        <div class="diag-arrow">◀</div>
+        <div class="diag-node" style="background:rgba(0,212,255,0.08);border-color:var(--acc1);">
+          <div class="icon">🔌</div><div class="label">الإرسال عبر<br>البوابة</div>
+        </div>
+        <div class="diag-arrow">◀</div>
+        <div class="diag-node">
+          <div class="icon">☁️</div><div class="label">المعالجة<br>السحابية</div>
+        </div>
+        <div class="diag-arrow">◀</div>
+        <div class="diag-node" style="background:rgba(123,47,255,0.08);border-color:var(--acc2);">
+          <div class="icon">💡</div><div class="label">قرارات<br>ذكية</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IoT Security -->
+    <div class="animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc3);">🔐 أمن إنترنت الأشياء (IoT Security)</div>
+
+      <div class="highlight-box warn" style="margin-bottom:1rem;">
+        <div class="hl-icon">⚠️</div>
+        <div class="hl-text"><strong>لماذا أمن IoT مهم؟</strong> كلما زاد عدد الأجهزة المتصلة، زادت نقاط الضعف. اختراق جهاز واحد قد يعرّض الشبكة كلها للخطر!</div>
+      </div>
+
+      <div class="security-grid">
+        <div class="sec-card threat">
+          <div class="sec-icon">🦠</div>
+          <div class="sec-title" style="color:var(--acc3);">هجمات الاختراق</div>
+          <div class="sec-desc">المهاجمون يستغلون الثغرات للوصول غير المصرح به</div>
+        </div>
+        <div class="sec-card threat">
+          <div class="sec-icon">🕵️</div>
+          <div class="sec-title" style="color:var(--acc3);">التجسس على البيانات</div>
+          <div class="sec-desc">اعتراض البيانات أثناء الإرسال وسرقة المعلومات</div>
+        </div>
+        <div class="sec-card threat">
+          <div class="sec-icon">💣</div>
+          <div class="sec-title" style="color:var(--acc3);">هجمات الحرمان من الخدمة</div>
+          <div class="sec-desc">إغراق الشبكة بطلبات وهمية لتعطيل الخدمة</div>
+        </div>
+        <div class="sec-card defense">
+          <div class="sec-icon">🔒</div>
+          <div class="sec-title" style="color:var(--acc4);">التشفير</div>
+          <div class="sec-desc">تشفير البيانات لحمايتها أثناء الإرسال والتخزين</div>
+        </div>
+        <div class="sec-card defense">
+          <div class="sec-icon">🔄</div>
+          <div class="sec-title" style="color:var(--acc4);">التحديث المستمر</div>
+          <div class="sec-desc">تحديث البرمجيات لإصلاح الثغرات الأمنية الجديدة</div>
+        </div>
+        <div class="sec-card defense">
+          <div class="sec-icon">🛡️</div>
+          <div class="sec-title" style="color:var(--acc4);">المصادقة القوية</div>
+          <div class="sec-desc">كلمات مرور قوية وتحقق ثنائي لمنع الوصول غير المصرح</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz 3 -->
+    <div class="animate-on-scroll">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc5);">🧠 اختبر فهمك — الدرس الثالث</div>
+      <div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س١</span> ما وظيفة بوابة إنترنت الأشياء (IoT Gateway)؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q3f1')"><div class="option-circle">أ</div> تخزين البيانات فقط</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q3f1')"><div class="option-circle">ب</div> جهاز وسيط يترجم بروتوكولات الاتصال ويؤمّن الشبكة ويدير البيانات</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q3f1')"><div class="option-circle">ج</div> واجهة المستخدم النهائي</div>
+          </div>
+          <div id="q3f1" class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س٢</span> أيٌّ من البروتوكولات التالية يناسب الزراعة الذكية في المناطق النائية؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q3f2')"><div class="option-circle">أ</div> Bluetooth</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q3f2')"><div class="option-circle">ب</div> Wi-Fi</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q3f2')"><div class="option-circle">ج</div> LoRaWAN (مدى طويل واستهلاك منخفض)</div>
+          </div>
+          <div id="q3f2" class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س٣</span> ما أهمية تشفير البيانات في شبكة IoT؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q3f3')"><div class="option-circle">أ</div> يجعل الإرسال أسرع</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q3f3')"><div class="option-circle">ب</div> يحمي البيانات من الاعتراض والسرقة أثناء الإرسال</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q3f3')"><div class="option-circle">ج</div> يقلل من استهلاك الطاقة</div>
+          </div>
+          <div id="q3f3" class="quiz-feedback"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ===== LESSON 4: IoT PROJECT DESIGN (INTERACTIVE) ===== -->
+  <!-- ============================================================ -->
+  <section class="section" id="lesson4">
+    <div class="section-header animate-on-scroll">
+      <div class="lesson-number">الدرس الرابع ⭐</div>
+      <h2 class="section-title">تطبيقات عملية لتصميم شبكة IoT</h2>
+      <div class="section-divider"></div>
+      <p class="section-desc">IoT Network Design Applications — صمّم نظام إنترنت الأشياء الخاص بك!</p>
+    </div>
+
+    <!-- Video -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.85rem;color:var(--acc1);font-weight:700;margin-bottom:1rem;">🎥 تصميم مشاريع IoT</div>
+      <div class="grid-2" style="gap:1rem;">
+        <div>
+          <div class="video-embed">
+            <iframe src="https://www.youtube.com/embed/6mBO2l8Gr38" title="IoT Project Design" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="font-size:0.8rem;color:var(--textmuted);margin-top:0.5rem;text-align:center;">كيف تصمم مشروع IoT خطوة بخطوة</div>
+        </div>
+        <div>
+          <div class="video-embed">
+            <iframe src="https://www.youtube.com/embed/QS4LIE5eEZY" title="Packet Tracer IoT" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div style="font-size:0.8rem;color:var(--textmuted);margin-top:0.5rem;text-align:center;">محاكاة IoT باستخدام Packet Tracer</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IoT Designer Tool -->
+    <div class="animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc1);">🎨 أداة تصميم نموذج إنترنت الأشياء — صمّم نظامك!</div>
+      <div class="iot-designer" id="iotDesigner">
+        <div class="designer-toolbar">
+          <div style="font-size:0.75rem;color:var(--acc1);font-weight:700;margin-left:0.5rem;">➕ أضف مكوناً:</div>
+          <button class="tool-btn" onclick="addComponent('🌡️', 'حساس حرارة', 'sensor')">🌡️ حساس حرارة</button>
+          <button class="tool-btn" onclick="addComponent('💧', 'حساس رطوبة', 'sensor')">💧 حساس رطوبة</button>
+          <button class="tool-btn" onclick="addComponent('👁️', 'حساس حركة', 'sensor')">👁️ حساس حركة</button>
+          <button class="tool-btn" onclick="addComponent('📱', 'Arduino', 'device')">📱 Arduino</button>
+          <button class="tool-btn" onclick="addComponent('🍓', 'Raspberry Pi', 'device')">🍓 Raspberry Pi</button>
+          <button class="tool-btn" onclick="addComponent('📶', 'Wi-Fi Gateway', 'gateway')">📶 بوابة Wi-Fi</button>
+          <button class="tool-btn" onclick="addComponent('☁️', 'السحابة', 'cloud')">☁️ السحابة</button>
+          <button class="tool-btn" onclick="addComponent('💡', 'مصباح ذكي', 'actuator')">💡 مصباح</button>
+          <button class="tool-btn" onclick="addComponent('⚙️', 'محرك Servo', 'actuator')">⚙️ محرك</button>
+          <button class="tool-btn" onclick="addComponent('🔔', 'إنذار صوتي', 'actuator')">🔔 إنذار</button>
+          <button class="tool-btn" onclick="clearCanvas()" style="color:var(--acc3);border-color:rgba(255,107,53,0.3);">🗑️ مسح الكل</button>
+        </div>
+        <div class="designer-canvas" id="designerCanvas">
+          <div class="canvas-empty-msg" id="canvasEmptyMsg">
+            <div class="big-icon">🔧</div>
+            <div>ابدأ بإضافة مكونات من شريط الأدوات أعلاه</div>
+            <div style="font-size:0.75rem;margin-top:0.3rem;">يمكنك سحب المكونات وتحريكها</div>
+          </div>
+        </div>
+        <div class="designer-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:var(--acc4);"></span> حساسات</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--acc1);"></span> أجهزة IoT</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--acc5);"></span> بوابات</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--acc2);"></span> السحابة</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--acc3);"></span> مشغلات</span>
+          <span style="margin-right:auto;font-size:0.7rem;color:var(--textmuted);">✋ اسحب المكونات لترتيبها</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sample Projects -->
+    <div class="animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1.2rem;color:var(--acc1);">📋 مشاريع IoT نموذجية</div>
+      <div class="tabs-wrapper">
+        <div class="tabs-header">
+          <button class="tab-btn active" onclick="switchTab(this, 'proj-irrigation')">🌱 نظام الري الذكي</button>
+          <button class="tab-btn" onclick="switchTab(this, 'proj-fire')">🔥 نظام إنذار الحريق</button>
+          <button class="tab-btn" onclick="switchTab(this, 'proj-school')">🏫 مشروع المدرسة</button>
+        </div>
+        <div id="proj-irrigation" class="tab-content active">
+          <div style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--acc4);">🌿 نظام الري الذكي</div>
+          <div class="iot-diagram" style="margin:0 0 1rem;">
+            <div class="diag-node"><div class="icon">💧</div><div class="label">حساس<br>الرطوبة</div></div>
+            <div class="diag-arrow">◀</div>
+            <div class="diag-node"><div class="icon">📱</div><div class="label">Arduino<br>Uno</div></div>
+            <div class="diag-arrow">◀</div>
+            <div class="diag-node"><div class="icon">📶</div><div class="label">بوابة<br>Wi-Fi</div></div>
+            <div class="diag-arrow">◀</div>
+            <div class="diag-node"><div class="icon">☁️</div><div class="label">معالجة<br>السحابة</div></div>
+            <div class="diag-arrow">◀</div>
+            <div class="diag-node"><div class="icon">💦</div><div class="label">مضخة<br>المياه</div></div>
+          </div>
+          <div class="glass-card" style="font-size:0.85rem;line-height:1.8;color:var(--textmuted);">
+            <strong style="color:var(--acc4);">كيف يعمل؟</strong><br>
+            ١. يقيس حساس الرطوبة مستوى رطوبة التربة<br>
+            ٢. إذا كانت الرطوبة أقل من الحد الأدنى (مثلاً 30%)، يرسل إشارة إلى Arduino<br>
+            ٣. يُحلّل الحاسوب البيانات ويرسل أمراً بتشغيل المضخة<br>
+            ٤. تُروى النباتات تلقائياً حتى تصل الرطوبة للمستوى المطلوب<br>
+            ٥. يُرسَل تقرير للمستخدم عبر تطبيق الهاتف<br><br>
+            <strong style="color:var(--acc4);">الفائدة:</strong> توفير 40-60% من مياه الري مقارنةً بالري التقليدي!
+          </div>
+        </div>
+        <div id="proj-fire" class="tab-content">
+          <div style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--acc3);">🔥 نظام إنذار الحريق الذكي</div>
+          <div class="iot-diagram" style="margin:0 0 1rem;">
+            <div class="diag-node"><div class="icon">💨</div><div class="label">حساس<br>الدخان</div></div>
+            <div class="diag-arrow">◀</div>
+            <div class="diag-node"><div class="icon">🌡️</div><div class="label">حساس<br>الحرارة</div></div>
+            <div class="diag-arrow">◀</div>
+            <div class="diag-node"><div class="icon">📱</div><div class="label">متحكم<br>دقيق</div></div>
+            <div class="diag-arrow">◀</div>
+            <div class="diag-node"><div class="icon">🔔</div><div class="label">إنذار<br>صوتي</div></div>
+            <div class="diag-arrow">◀</div>
+            <div class="diag-node"><div class="icon">💧</div><div class="label">مضخة<br>إطفاء</div></div>
+          </div>
+          <div class="glass-card" style="font-size:0.85rem;line-height:1.8;color:var(--textmuted);">
+            <strong style="color:var(--acc3);">كيف يعمل؟</strong><br>
+            ١. تستشعر أجهزة الاستشعار وجود دخان أو حرارة غير طبيعية<br>
+            ٢. يُرسَل تنبيه فوري لصاحب المنزل وخدمة الإطفاء<br>
+            ٣. تُشغَّل مضخة المياه (أو المروحة) تلقائياً لإخماد الحريق<br>
+            ٤. تُفتَح النوافذ والأبواب الآلية لتسريع الإخلاء<br>
+            ٥. تُسجَّل جميع البيانات للتحليل لاحقاً
+          </div>
+        </div>
+        <div id="proj-school" class="tab-content">
+          <div style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--acc2);">🏫 مشروع المدرسة الذكية</div>
+          <div class="glass-card" style="font-size:0.85rem;line-height:1.8;color:var(--textmuted);">
+            <strong style="color:var(--acc2);">ما الذي يمكن تطبيقه في مدرستك؟</strong><br><br>
+            🚪 <strong>إدارة الدخول:</strong> بطاقات RFID للطلاب لتسجيل الحضور تلقائياً<br>
+            💡 <strong>الإضاءة الذكية:</strong> تُطفأ أضواء الفصول الفارغة تلقائياً<br>
+            🌡️ <strong>التحكم في البيئة:</strong> ضبط تكييف الفصول حسب عدد الطلاب<br>
+            📊 <strong>إدارة الحضور:</strong> توليد تقارير حضور آلية للمعلمين<br>
+            🔒 <strong>أمن المدرسة:</strong> كاميرات ذكية وإنذارات متصلة بالإنترنت<br>
+            💧 <strong>ترشيد المياه:</strong> صنابير تعمل باللمس لمنع الهدر<br><br>
+            <strong style="color:var(--acc2);">خطوات تنفيذ المشروع:</strong><br>
+            ① تحديد المشكلة والحاجة ← ② اختيار المكونات ← ③ تصميم النموذج ← ④ البرمجة ← ⑤ الاختبار ← ⑥ النشر
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Planning Tool -->
+    <div class="glass-card animate-on-scroll" style="margin-bottom:2rem;">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc1);">📝 مخطط مشروعك الخاص — خطوات التنفيذ</div>
+      <div id="projectSteps">
+        <div class="progress-wrapper">
+          <div class="progress-label"><span>تقدمك في التخطيط</span><span id="progressPct">0%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        </div>
+        <div class="accordion" id="projectPlan">
+          <div class="acc-item" onclick="toggleProjectStep(this, 1)">
+            <div class="acc-header" style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;cursor:pointer;">
+              <div style="display:flex;align-items:center;gap:0.8rem;">
+                <input type="checkbox" id="step1" style="width:18px;height:18px;accent-color:var(--acc1);" onclick="updateProgress(event)">
+                <span style="font-size:1rem;">1️⃣</span>
+                <span style="font-weight:700;font-size:0.9rem;">تحديد المشكلة والحاجة</span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--acc1);">▼</span>
+            </div>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                حدّد المشكلة التي تريد حلها: هل هي مشكلة في الطاقة؟ الأمان؟ ترشيد المياه؟ الراحة؟ اكتب وصفاً واضحاً للمشكلة وتأثيرها على الحياة اليومية.
+              </div>
+            </div>
+          </div>
+          <div class="acc-item" onclick="toggleProjectStep(this, 2)">
+            <div class="acc-header" style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;cursor:pointer;">
+              <div style="display:flex;align-items:center;gap:0.8rem;">
+                <input type="checkbox" id="step2" style="width:18px;height:18px;accent-color:var(--acc1);" onclick="updateProgress(event)">
+                <span style="font-size:1rem;">2️⃣</span>
+                <span style="font-weight:700;font-size:0.9rem;">تحليل الاحتياجات والمستخدمين</span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--acc1);">▼</span>
+            </div>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                من هم المستخدمون المستهدفون؟ ما احتياجاتهم؟ ما قيود التصميم (ميزانية، مساحة، طاقة)؟ قم بجمع المتطلبات قبل البدء بالتصميم.
+              </div>
+            </div>
+          </div>
+          <div class="acc-item" onclick="toggleProjectStep(this, 3)">
+            <div class="acc-header" style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;cursor:pointer;">
+              <div style="display:flex;align-items:center;gap:0.8rem;">
+                <input type="checkbox" id="step3" style="width:18px;height:18px;accent-color:var(--acc1);" onclick="updateProgress(event)">
+                <span style="font-size:1rem;">3️⃣</span>
+                <span style="font-weight:700;font-size:0.9rem;">اختيار مكونات IoT المناسبة</span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--acc1);">▼</span>
+            </div>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                حدّد الحساسات اللازمة، نوع المتحكم (Arduino أو Raspberry Pi)، بروتوكول الاتصال (Wi-Fi أو Bluetooth)، والمشغلات المطلوبة.
+              </div>
+            </div>
+          </div>
+          <div class="acc-item" onclick="toggleProjectStep(this, 4)">
+            <div class="acc-header" style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;cursor:pointer;">
+              <div style="display:flex;align-items:center;gap:0.8rem;">
+                <input type="checkbox" id="step4" style="width:18px;height:18px;accent-color:var(--acc1);" onclick="updateProgress(event)">
+                <span style="font-size:1rem;">4️⃣</span>
+                <span style="font-weight:700;font-size:0.9rem;">تصميم نموذج أولي</span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--acc1);">▼</span>
+            </div>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                ارسم مخطط النظام الكامل يوضح جميع المكونات وطريقة اتصال بعضها ببعض. يمكنك استخدام أداة التصميم أعلاه أو برنامج Figma أو Packet Tracer.
+              </div>
+            </div>
+          </div>
+          <div class="acc-item" onclick="toggleProjectStep(this, 5)">
+            <div class="acc-header" style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;cursor:pointer;">
+              <div style="display:flex;align-items:center;gap:0.8rem;">
+                <input type="checkbox" id="step5" style="width:18px;height:18px;accent-color:var(--acc1);" onclick="updateProgress(event)">
+                <span style="font-size:1rem;">5️⃣</span>
+                <span style="font-weight:700;font-size:0.9rem;">كتابة خطة التنفيذ</span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--acc1);">▼</span>
+            </div>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                اكتب خطة تفصيلية تتضمن: الجدول الزمني، توزيع المهام بين أفراد الفريق، قائمة المواد اللازمة، وخطوات الاختبار والتحقق من عمل النظام.
+              </div>
+            </div>
+          </div>
+          <div class="acc-item" onclick="toggleProjectStep(this, 6)">
+            <div class="acc-header" style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;cursor:pointer;">
+              <div style="display:flex;align-items:center;gap:0.8rem;">
+                <input type="checkbox" id="step6" style="width:18px;height:18px;accent-color:var(--acc1);" onclick="updateProgress(event)">
+                <span style="font-size:1rem;">6️⃣</span>
+                <span style="font-weight:700;font-size:0.9rem;">إعداد البروشور التعريفي</span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--acc1);">▼</span>
+            </div>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                صمّم كتيّباً تعريفياً بسيطاً وجاذباً يشرح مشروع IoT الخاص بك داخل المدرسة. استخدم برامج مثل Canva أو أي أداة تصميم رقمية.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Quiz -->
+    <div class="animate-on-scroll">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--acc5);">🧠 الاختبار الختامي — الدرس الرابع</div>
+      <div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س١</span> ما أول خطوة في تصميم مشروع IoT؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q4f1')"><div class="option-circle">أ</div> شراء المكونات الإلكترونية فوراً</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q4f1')"><div class="option-circle">ب</div> تحديد المشكلة والحاجة الفعلية</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q4f1')"><div class="option-circle">ج</div> كتابة الكود البرمجي</div>
+          </div>
+          <div id="q4f1" class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س٢</span> في نظام إنذار الحريق الذكي، ما الذي يحدث عند اكتشاف دخان؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q4f2')"><div class="option-circle">أ</div> يُطفأ الجهاز تلقائياً</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q4f2')"><div class="option-circle">ب</div> يُرسَل تنبيه وتُشغَّل المضخة ويُفتَح باب الإخلاء تلقائياً</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q4f2')"><div class="option-circle">ج</div> ينتظر تدخلاً بشرياً</div>
+          </div>
+          <div id="q4f2" class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-question"><span class="quiz-num">س٣</span> لماذا يُفضَّل Arduino Uno في مشاريع IoT البسيطة؟</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q4f3')"><div class="option-circle">أ</div> لأنه يعمل بدون كهرباء</div>
+            <div class="quiz-option" onclick="answerQuiz(this, true, 'q4f3')"><div class="option-circle">ب</div> لأنه سهل البرمجة ورخيص ومصمم لتنفيذ مهمة محددة بكفاءة</div>
+            <div class="quiz-option" onclick="answerQuiz(this, false, 'q4f3')"><div class="option-circle">ج</div> لأنه أسرع حاسوب في العالم</div>
+          </div>
+          <div id="q4f3" class="quiz-feedback"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- ===== FLASHCARDS SECTION ===== -->
+  <!-- ============================================================ -->
+  <section class="section" id="flashcards">
+    <div class="section-header animate-on-scroll">
+      <div class="lesson-number">بطاقات التعلم</div>
+      <h2 class="section-title">🃏 Flash Cards — الوحدة كاملة</h2>
+      <div class="section-divider"></div>
+      <p class="section-desc">راجع جميع المفاهيم الأساسية في الوحدة — اضغط على البطاقة لرؤية التعريف</p>
+    </div>
+
+    <div class="glass-card animate-on-scroll" style="margin-bottom:2rem;">
+      <!-- Filter tabs -->
+      <div class="tabs-header" style="margin-bottom:1.5rem;border:1px solid var(--glassborder);border-radius:10px;overflow:hidden;">
+        <button class="tab-btn active" onclick="filterCards('all', this)">🌐 الكل (12)</button>
+        <button class="tab-btn" onclick="filterCards('lesson1', this)">📡 د.١</button>
+        <button class="tab-btn" onclick="filterCards('lesson2', this)">🏠 د.٢</button>
+        <button class="tab-btn" onclick="filterCards('lesson3', this)">🔗 د.٣</button>
+        <button class="tab-btn" onclick="filterCards('lesson4', this)">🎮 د.٤</button>
+      </div>
+
+      <!-- Flashcard Display -->
+      <div class="flashcard-container">
+        <div class="flashcard-scene" id="flashcardScene" onclick="flipCard()">
+          <div class="flashcard-inner" id="flashcardInner">
+            <div class="flashcard-face flashcard-front">
+              <div class="flashcard-icon" id="fcIcon">🌐</div>
+              <div class="flashcard-term" id="fcTerm">إنترنت الأشياء (IoT)</div>
+              <div class="flashcard-hint">اضغط لرؤية التعريف 👇</div>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <div class="flashcard-def" id="fcDef">شبكة من الأجهزة الإلكترونية التي تُدمج في أجهزة الاستشعار والبرمجيات وتقنيات الاتصال، ويمكنها جمع البيانات ومشاركتها عبر الإنترنت دون تدخل بشري مباشر</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flashcard-counter">
+          <span id="fcCurrent">1</span> / <span id="fcTotal">12</span>
+          <div class="flashcard-progress-bar" style="margin-top:0.4rem;">
+            <div class="flashcard-progress-fill" id="fcProgress" style="width:8%;"></div>
+          </div>
+        </div>
+
+        <div class="flashcard-controls">
+          <button class="fc-btn" onclick="prevCard()">⟵ السابقة</button>
+          <button class="fc-btn primary" onclick="flipCard()">🔄 اقلب البطاقة</button>
+          <button class="fc-btn" onclick="nextCard()">التالية ⟶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- All Cards Preview -->
+    <div class="animate-on-scroll">
+      <div style="font-size:0.9rem;font-weight:700;margin-bottom:1.2rem;color:var(--acc1);">📚 جميع البطاقات دفعة واحدة</div>
+      <div class="grid-3" id="allCardsGrid">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary -->
+  <section class="section" style="max-width:700px;" id="summary">
+    <div class="glass-card animate-on-scroll">
+      <div style="text-align:center;margin-bottom:1.5rem;">
+        <div style="font-size:3rem;margin-bottom:0.5rem;">🎓</div>
+        <div style="font-size:1.3rem;font-weight:900;color:var(--acc1);margin-bottom:0.5rem;">ملخص الوحدة الأولى</div>
+        <div style="font-size:0.85rem;color:var(--textmuted);">إنترنت الأشياء — Internet of Things</div>
+      </div>
+      <div style="font-size:0.85rem;line-height:2;color:var(--textmuted);">
+        ✅ <strong style="color:var(--text);">إنترنت الأشياء</strong> شبكة ذكية تربط الأجهزة اليومية بالإنترنت<br>
+        ✅ <strong style="color:var(--text);">المكونات الخمسة:</strong> الحساسات، أجهزة IoT، وسيلة الاتصال، السحابة، واجهة المستخدم<br>
+        ✅ <strong style="color:var(--text);">الأمثلة العملية:</strong> المنزل الذكي، الصحة، الزراعة، السيارات، المدن الذكية<br>
+        ✅ <strong style="color:var(--text);">البروتوكولات:</strong> Wi-Fi، Bluetooth، Zigbee، LoRaWAN<br>
+        ✅ <strong style="color:var(--text);">الأمن الرقمي:</strong> تشفير البيانات + تحديثات منتظمة + مصادقة قوية<br>
+        ✅ <strong style="color:var(--text);">تصميم المشروع:</strong> ٦ خطوات من تحديد المشكلة حتى الإعداد للتقديم
+      </div>
+      <div style="margin-top:1.5rem;text-align:center;">
+        <button class="btn-primary" onclick="scrollToSection('flashcards')">🃏 راجع البطاقات مجدداً</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div style="font-size:1.5rem;margin-bottom:0.5rem;">🌐</div>
+    <div style="font-weight:700;color:var(--text);margin-bottom:0.3rem;">وحدة إنترنت الأشياء | المهارات الرقمية</div>
+    <div>الصف العاشر — الفصل الدراسي الثاني | المركز الوطني لتطوير المناهج</div>
+    <div style="margin-top:0.5rem;opacity:0.6;font-size:0.75rem;">تم تصميم هذا الموقع كمشروع تعليمي تفاعلي</div>
+  </footer>
+
+</div><!-- end main-wrapper -->
+
+<!-- ===== MODALS ===== -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ===== PARTICLES =====
+(function() {
+  const p = document.getElementById('particles');
+  const colors = ['#00d4ff', '#7b2fff', '#00ff9d', '#ffcc00'];
+  for (let i = 0; i < 20; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'particle';
+    const size = Math.random() * 4 + 2;
+    dot.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${Math.random()*15+10}s;
+      animation-delay:${Math.random()*10}s;
+    `;
+    p.appendChild(dot);
+  }
+})();
+
+// ===== SCROLL ANIMATIONS =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+// ===== NAV ACTIVE =====
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+}
+
+window.addEventListener('scroll', () => {
+  const sections = ['home', 'lesson1', 'lesson2', 'lesson3', 'lesson4', 'flashcards'];
+  const btns = document.querySelectorAll('.nav-btn');
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= 120 && rect.bottom > 0 && btns[i]) {
+        btns.forEach(b => b.classList.remove('active'));
+        btns[i].classList.add('active');
+      }
+    }
+  });
+});
+
+// ===== ACCORDION =====
+function toggleAcc(item) {
+  const isOpen = item.classList.contains('open');
+  item.classList.toggle('open', !isOpen);
+}
+
+// ===== TABS =====
+function switchTab(btn, id) {
+  const parent = btn.closest('.tabs-wrapper');
+  parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  const content = document.getElementById(id);
+  if (content) content.classList.add('active');
+}
+
+// ===== QUIZ =====
+function answerQuiz(opt, correct, feedbackId) {
+  const allOpts = opt.closest('.quiz-options').querySelectorAll('.quiz-option');
+  if (opt.classList.contains('correct') || opt.classList.contains('wrong')) return;
+  allOpts.forEach(o => o.classList.add('disabled'));
+  opt.classList.add(correct ? 'correct' : 'wrong');
+  opt.querySelector('.option-circle').textContent = correct ? '✓' : '✗';
+
+  const fb = document.getElementById(feedbackId);
+  if (fb) {
+    fb.className = 'quiz-feedback show ' + (correct ? 'correct-msg' : 'wrong-msg');
+    fb.textContent = correct
+      ? '✅ إجابة صحيحة! أحسنت.'
+      : '❌ إجابة خاطئة. راجع محتوى الدرس وحاول مجدداً.';
+
+    if (!correct) {
+      allOpts.forEach(o => {
+        if (o.dataset && o.classList.contains('disabled') && !o.classList.contains('wrong')) {
+          // highlight correct
+        }
+      });
+      // Find and show correct
+      allOpts.forEach(o => {
+        const fn = o.getAttribute('onclick');
+        if (fn && fn.includes('true')) o.classList.add('correct');
+      });
+    }
+  }
+}
+
+// ===== SMART HOME SIMULATOR =====
+const sensorLog = [];
+
+function toggleDevice(el, key, msg) {
+  const isOn = el.classList.contains('on');
+  el.classList.toggle('on', !isOn);
+  const display = document.getElementById('sensorDisplay');
+  const timestamp = new Date().toLocaleTimeString('ar-EG');
+  const status = !isOn ? '✅ مُشغَّل' : '⭕ مُوقَف';
+  const logMsg = `[${timestamp}] ${status} — ${msg || key}`;
+  sensorLog.unshift(logMsg);
+  if (sensorLog.length > 5) sensorLog.pop();
+  display.innerHTML = sensorLog.map((m, i) =>
+    `<span style="color:${i===0?'var(--acc4)':'var(--textmuted)'};font-size:${i===0?'0.85':'0.75'}rem;">${m}</span>`
+  ).join('<br>');
+}
+
+// ===== IoT DESIGNER =====
+let compCount = 0;
+let dragEl = null, dragOX = 0, dragOY = 0;
+
+const compColors = {
+  sensor: 'var(--acc4)',
+  device: 'var(--acc1)',
+  gateway: 'var(--acc5)',
+  cloud: 'var(--acc2)',
+  actuator: 'var(--acc3)'
+};
+
+function addComponent(icon, label, type) {
+  const canvas = document.getElementById('designerCanvas');
+  const emptyMsg = document.getElementById('canvasEmptyMsg');
+  if (emptyMsg) emptyMsg.style.display = 'none';
+
+  const el = document.createElement('div');
+  el.className = 'canvas-component';
+  el.style.cssText = `
+    left:${20 + (compCount % 5) * 20}px;
+    top:${20 + Math.floor(compCount / 5) * 70}px;
+    border-color:${compColors[type]||'var(--glassborder)'};
+  `;
+  el.innerHTML = `<span class="comp-icon">${icon}</span><span>${label}</span>`;
+  el.setAttribute('draggable', 'false');
+
+  // Touch drag
+  el.addEventListener('mousedown', startDrag);
+  el.addEventListener('touchstart', startTouchDrag, { passive: true });
+
+  canvas.appendChild(el);
+  compCount++;
+}
+
+function startDrag(e) {
+  e.preventDefault();
+  dragEl = e.currentTarget;
+  const rect = dragEl.getBoundingClientRect();
+  dragOX = e.clientX - rect.left;
+  dragOY = e.clientY - rect.top;
+  document.addEventListener('mousemove', doDrag);
+  document.addEventListener('mouseup', endDrag);
+}
+
+function doDrag(e) {
+  if (!dragEl) return;
+  const canvas = document.getElementById('designerCanvas');
+  const cr = canvas.getBoundingClientRect();
+  let x = e.clientX - cr.left - dragOX;
+  let y = e.clientY - cr.top - dragOY;
+  x = Math.max(0, Math.min(x, cr.width - dragEl.offsetWidth));
+  y = Math.max(0, Math.min(y, cr.height - dragEl.offsetHeight));
+  dragEl.style.left = x + 'px';
+  dragEl.style.top = y + 'px';
+}
+
+function endDrag() {
+  dragEl = null;
+  document.removeEventListener('mousemove', doDrag);
+  document.removeEventListener('mouseup', endDrag);
+}
+
+function startTouchDrag(e) {
+  dragEl = e.currentTarget;
+  const touch = e.touches[0];
+  const rect = dragEl.getBoundingClientRect();
+  dragOX = touch.clientX - rect.left;
+  dragOY = touch.clientY - rect.top;
+  document.addEventListener('touchmove', doTouchDrag, { passive: false });
+  document.addEventListener('touchend', endTouchDrag);
+}
+
+function doTouchDrag(e) {
+  e.preventDefault();
+  if (!dragEl) return;
+  const touch = e.touches[0];
+  const canvas = document.getElementById('designerCanvas');
+  const cr = canvas.getBoundingClientRect();
+  let x = touch.clientX - cr.left - dragOX;
+  let y = touch.clientY - cr.top - dragOY;
+  x = Math.max(0, Math.min(x, cr.width - dragEl.offsetWidth));
+  y = Math.max(0, Math.min(y, cr.height - dragEl.offsetHeight));
+  dragEl.style.left = x + 'px';
+  dragEl.style.top = y + 'px';
+}
+
+function endTouchDrag() {
+  dragEl = null;
+  document.removeEventListener('touchmove', doTouchDrag);
+  document.removeEventListener('touchend', endTouchDrag);
+}
+
+function clearCanvas() {
+  const canvas = document.getElementById('designerCanvas');
+  canvas.querySelectorAll('.canvas-component').forEach(el => el.remove());
+  const emptyMsg = document.getElementById('canvasEmptyMsg');
+  if (emptyMsg) emptyMsg.style.display = 'flex';
+  compCount = 0;
+}
+
+// ===== PROJECT PROGRESS =====
+function updateProgress(e) {
+  e.stopPropagation();
+  const checks = document.querySelectorAll('#projectPlan input[type=checkbox]');
+  const total = checks.length;
+  let done = 0;
+  checks.forEach(c => { if (c.checked) done++; });
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function toggleProjectStep(item, num) {
+  const body = item.querySelector('.acc-body');
+  if (!body) return;
+  const isOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
+  body.style.maxHeight = isOpen ? '0px' : '400px';
+}
+
+// ===== FLASHCARDS DATA =====
+const cards = [
+  { lesson: 'lesson1', icon: '🌐', term: 'إنترنت الأشياء (IoT)', def: 'شبكة من الأجهزة الإلكترونية التي تُدمج في أجهزة الاستشعار والبرمجيات وتقنيات الاتصال، ويمكنها جمع البيانات ومشاركتها عبر الإنترنت دون تدخل بشري مباشر' },
+  { lesson: 'lesson1', icon: '🌡️', term: 'أجهزة الاستشعار (Sensors)', def: 'أجهزة تجمع البيانات من البيئة وتحوّلها إلى إشارات كهربائية أو رقمية — مثل حساسات الحرارة، الرطوبة، الضوء، الصوت، والضغط' },
+  { lesson: 'lesson1', icon: '⚙️', term: 'المشغّلات (Actuators)', def: 'أجهزة تستقبل إشارة كهربائية من جهاز الاستشعار وتُحدث تأثيراً مادياً في العالم الحقيقي — كفتح صمام، تشغيل محرك، أو إيقاف مكيف' },
+  { lesson: 'lesson1', icon: '📱', term: 'Arduino Uno', def: 'لوحة تطوير متحكم دقيق مفتوحة المصدر، تُستخدم على نطاق واسع في مشاريع إنترنت الأشياء للتحكم في الأنظمة البسيطة بتكلفة منخفضة' },
+  { lesson: 'lesson1', icon: '🍓', term: 'Raspberry Pi', def: 'حاسوب أحادي اللوحة (SBC) صغير الحجم، يعمل بنظام تشغيل كامل، ويُستخدم في مشاريع IoT الأكثر تعقيداً التي تتطلب قوة معالجة أعلى' },
+  { lesson: 'lesson2', icon: '🏠', term: 'المنزل الذكي (Smart Home)', def: 'منزل تعمل فيه الأجهزة المنزلية (الإضاءة، التكييف، الأمان) باستخدام أجهزة استشعار وإنترنت للتحكم التلقائي وعن بُعد عبر الهاتف' },
+  { lesson: 'lesson2', icon: '🌱', term: 'الزراعة الذكية (Smart Agriculture)', def: 'استخدام حساسات الرطوبة ودرجة الحرارة وتقنيات IoT لإدارة المحاصيل الزراعية تلقائياً وتوفير المياه والجهد البشري' },
+  { lesson: 'lesson3', icon: '🔌', term: 'بوابة IoT (IoT Gateway)', def: 'جهاز وسيط يستقبل البيانات من أجهزة الاستشعار ويترجم بروتوكولات الاتصال المختلفة ويؤمّن الشبكة ويرسل البيانات للسحابة' },
+  { lesson: 'lesson3', icon: '☁️', term: 'الحوسبة السحابية (Cloud Computing)', def: 'تقنية تقوم على نقل البيانات إلى خوادم بعيدة عبر الإنترنت لمعالجتها وتخزينها، مما يوفر قوة حوسبة عالية بتكلفة منخفضة' },
+  { lesson: 'lesson3', icon: '📡', term: 'بروتوكول الاتصال (Protocol)', def: 'مجموعة من القواعد والمعايير التي تُنظّم عملية تبادل البيانات بين الأجهزة المختلفة في شبكات IoT — مثل Wi-Fi وBluetooth وZigbee' },
+  { lesson: 'lesson4', icon: '🎮', term: 'نظام الري الذكي', def: 'نظام IoT يستخدم حساسات الرطوبة والحرارة للتحكم في ري المحاصيل تلقائياً، مما يوفر 40-60% من مياه الري مقارنةً بالري التقليدي' },
+  { lesson: 'lesson4', icon: '🔥', term: 'نظام إنذار الحريق الذكي', def: 'نظام IoT يستخدم حساسات الدخان والحرارة لاكتشاف الحرائق المبكر وإرسال تنبيهات فورية وتشغيل أنظمة الإطفاء التلقائية' },
+];
+
+let currentCardIndex = 0;
+let filteredCards = [...cards];
+
+function updateFlashcard() {
+  const card = filteredCards[currentCardIndex];
+  document.getElementById('fcIcon').textContent = card.icon;
+  document.getElementById('fcTerm').textContent = card.term;
+  document.getElementById('fcDef').textContent = card.def;
+  document.getElementById('fcCurrent').textContent = currentCardIndex + 1;
+  document.getElementById('fcTotal').textContent = filteredCards.length;
+  const pct = ((currentCardIndex + 1) / filteredCards.length) * 100;
+  document.getElementById('fcProgress').style.width = pct + '%';
+  // Reset flip
+  document.getElementById('flashcardScene').classList.remove('flipped');
+}
+
+function flipCard() {
+  document.getElementById('flashcardScene').classList.toggle('flipped');
+}
+
+function nextCard() {
+  currentCardIndex = (currentCardIndex + 1) % filteredCards.length;
+  updateFlashcard();
+}
+
+function prevCard() {
+  currentCardIndex = (currentCardIndex - 1 + filteredCards.length) % filteredCards.length;
+  updateFlashcard();
+}
+
+function filterCards(lesson, btn) {
+  document.querySelectorAll('#flashcards .tabs-header .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filteredCards = lesson === 'all' ? [...cards] : cards.filter(c => c.lesson === lesson);
+  currentCardIndex = 0;
+  updateFlashcard();
+  renderAllCards();
+}
+
+function renderAllCards() {
+  const grid = document.getElementById('allCardsGrid');
+  grid.innerHTML = '';
+  filteredCards.forEach((card, i) => {
+    const el = document.createElement('div');
+    el.className = 'concept-card';
+    el.style.cursor = 'pointer';
+    el.onclick = () => { currentCardIndex = i; updateFlashcard(); scrollToSection('flashcards'); };
+    el.innerHTML = `
+      <span class="concept-icon">${card.icon}</span>
+      <div class="concept-title">${card.term}</div>
+      <div class="concept-desc" style="font-size:0.75rem;">${card.def.substring(0, 80)}...</div>
+    `;
+    grid.appendChild(el);
+  });
+}
+
+renderAllCards();
+updateFlashcard();
+
+// ===== MODALS DATA =====
+const modals = {
+  'sensor-info': { title: '🌡️ أجهزة الاستشعار (Sensors)', body: '<strong>وظيفتها:</strong> جمع البيانات من البيئة المحيطة وتحويلها إلى إشارات رقمية.<br><br><strong>أمثلة:</strong><ul><li>حساسات درجة الحرارة والرطوبة</li><li>حساسات الحركة والضوء</li><li>حساسات الغاز والرائحة</li><li>حساسات الضغط والصوت</li></ul><br><strong>ملاحظة:</strong> لا يُشترط في جميع أنظمة IoT وجود أجهزة استشعار — يمكن التحكم ببعض الأجهزة عبر تطبيق متصل بها مباشرة.' },
+  'device-info': { title: '💻 أجهزة إنترنت الأشياء (IoT Devices)', body: 'أجهزة مادية تتكوّن من وحدة حوسبة ووحدة اتصال وتخزين. أبرزها:<ul><li><strong>Arduino Uno:</strong> متحكم دقيق منخفض التكلفة</li><li><strong>Raspberry Pi:</strong> حاسوب أحادي اللوحة كامل الوظائف</li><li><strong>Intel Edison:</strong> وحدة تطوير متقدمة</li></ul>' },
+  'gateway-info': { title: '🔌 بوابة إنترنت الأشياء (IoT Gateway)', body: '<strong>وظيفتها:</strong> جهاز وسيط بين الأجهزة الطرفية والخدمة السحابية.<br><br><strong>مهامها:</strong><ul><li>ترجمة بروتوكولات الاتصال المختلفة</li><li>تأمين الشبكة من الهجمات</li><li>إجراء معالجة أولية للبيانات</li><li>إدارة حركة البيانات بكفاءة</li></ul>' },
+  'cloud-info': { title: '☁️ منصة السحابة (Cloud Platform)', body: 'تستقبل البيانات من البوابة وتُحلّلها باستخدام برمجيات متقدمة لاستخلاص نتائج قيّمة، ثم تُرسل أوامر للأجهزة أو تنبيهات للمستخدم.<br><br><strong>مميزاتها:</strong> تخزين ضخم، قوة معالجة عالية، وصول من أي مكان.' },
+  'ui-info': { title: '👤 واجهة المستخدم النهائي (End User Interface)', body: 'تعرض المعلومات وتتيح التحكم في الأجهزة عبر:<ul><li>تطبيقات الهاتف الذكي</li><li>المواقع الإلكترونية</li><li>التحكم الصوتي (Alexa, Google Home)</li><li>لوحات التحكم باللمس</li></ul>' },
+  'smart-home-modal': { title: '🏠 المنزل الذكي', body: 'يستخدم المنزل الذكي شبكة من الأجهزة المتصلة للتحكم في:<ul><li>💡 الإضاءة — تُشعَل وتُطفأ تلقائياً حسب الحركة والوقت</li><li>❄️ التكييف — يتكيّف مع عدد الأشخاص ودرجة حرارة الخارج</li><li>🔒 الأمان — كاميرات وأقفال ذكية</li><li>🎵 الترفيه — موسيقى تستجيب للمزاج</li><li>🍽️ المطبخ — أجهزة تُرسل تنبيهاً عند انتهاء الطهي</li></ul>' },
+  'smart-health-modal': { title: '🏥 الرعاية الصحية الذكية', body: 'تُراقب الأجهزة القابلة للارتداء وأجهزة المستشفى:<ul><li>دقات القلب وضغط الدم</li><li>نسبة الأكسجين في الدم</li><li>مستوى السكر في الدم</li><li>درجة حرارة الجسم</li></ul>وتُرسل هذه البيانات للطبيب فوراً، مما يُمكّن من التدخل السريع في حالات الطوارئ.' },
+  'smart-agri-modal': { title: '🌱 الزراعة الذكية', body: 'تُستخدم في:<ul><li>قياس رطوبة التربة وري المحاصيل تلقائياً</li><li>مراقبة درجات الحرارة والتنبؤ بالأمراض</li><li>تحليل جودة المحاصيل عبر صور الطائرات المسيّرة</li><li>إدارة المواشي وتتبع موقعها</li></ul><br><strong>النتيجة:</strong> توفير 40-60% من المياه وزيادة الإنتاجية بنسبة تصل إلى 25%.' },
+  'smart-car-modal': { title: '🚗 السيارات الذكية', body: 'تحتوي السيارة الذكية على عشرات الحساسات التي تُراقب:<ul><li>درجة حرارة المحرك ومستوى الزيت</li><li>ضغط الإطارات والسرعة</li><li>الضغط على المكابح والمسافة بين السيارات</li><li>الحالة النفسية للسائق (التعب)</li></ul>' },
+  'smart-city-modal': { title: '🌆 المدن الذكية', body: 'تُدار خدمات المدينة بذكاء:<ul><li>إشارات المرور المتكيّفة مع كثافة السيارات</li><li>رصد جودة الهواء في الوقت الحقيقي</li><li>إدارة النفايات ومراقبة مستوى امتلاء الحاويات</li><li>شبكة إنارة ذكية توفّر 40% من الطاقة</li></ul>' },
+  'smart-industry-modal': { title: '🏭 الصناعة الذكية (Industry 4.0)', body: 'تُستخدم في:<ul><li>مراقبة خطوط الإنتاج باستمرار</li><li>التنبؤ بأعطال الآلات قبل حدوثها</li><li>التحكم في روبوتات التجميع عن بُعد</li><li>تحسين سلاسل الإمداد والتوزيع</li></ul>' },
+};
+
+function showModal(id) {
+  const data = modals[id];
+  if (!data) return;
+  document.getElementById('modalTitle').textContent = data.title;
+  document.getElementById('modalBody').innerHTML = data.body;
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalBackdrop') || e.target.classList.contains('modal-close')) {
+    document.getElementById('modalBackdrop').classList.remove('open');
+  }
+}
+
+// ===== VIDEO MODAL =====
+function openVideo(url, title) {
+  showModal('_video_');
+  document.getElementById('modalTitle').textContent = '🎥 ' + title;
+  document.getElementById('modalBody').innerHTML = `<div class="video-embed"><iframe src="${url}?autoplay=1" title="${title}" allowfullscreen></iframe></div>`;
+}
+
+// keyboard ESC to close modal
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal({ target: document.getElementById('modalBackdrop') });
+});
+
+</script>
+</body>
+</html>
